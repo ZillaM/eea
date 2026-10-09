@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Home Page Demo</title>
+<title>Self-Study Page Demo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
@@ -177,14 +177,6 @@
   footer .brand .e{background:#fff;color:var(--ink)}
   footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
 
-  /* steps */
-  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:36px}
-  .steps .card b{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--coral-soft);color:var(--coral);font-family:"Outfit",sans-serif;font-size:1.1rem;margin-bottom:14px}
-  .outs{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:36px}
-  .outs .card h3::before{content:"→ ";color:var(--coral)}
-  @media(max-width:900px){.steps{grid-template-columns:1fr 1fr}}
-  @media(max-width:600px){.steps,.outs{grid-template-columns:1fr}}
-
   /* comparison table (identical on both pages) */
   .ctable{width:100%;border-collapse:separate;border-spacing:0;background:var(--surface);border-radius:var(--radius);box-shadow:0 14px 34px -22px rgba(22,35,31,.35);overflow:hidden;font-size:1rem}
   .ctable th,.ctable td{padding:15px 20px;text-align:center;border-bottom:1px solid #EFE6D6;vertical-align:middle}
@@ -242,14 +234,17 @@
   .headshot img{width:100%;height:100%;object-fit:cover;object-position:50% 30%;transform:scale(1.35);transform-origin:48% 32%}
   @media(max-width:600px){.head.with-photo{gap:18px;align-items:flex-start}.headshot{width:84px;height:84px;font-size:.7rem}}
 
-  /* basics (home) */
-  .basics-lede{font-size:1.2rem;margin-top:12px}
-  .ifthen{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:32px}
-  .it{background:var(--surface);border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:8px;min-width:0}
-  .it span{color:var(--muted);font-size:.98rem}
-  .it b{font-family:"Outfit",sans-serif;font-size:1.15rem;color:var(--ink)}
-  .it b::before{content:"→ ";color:var(--coral)}
-  @media(max-width:700px){.ifthen{grid-template-columns:1fr}}
+  /* course gallery */
+  .courses{display:grid;grid-template-columns:repeat(4,1fr);gap:26px 20px}
+  .course .cimg{aspect-ratio:16/9;max-width:100%;border-radius:16px;overflow:hidden;background:repeating-linear-gradient(135deg,#E8DDCB 0 12px,#EFE6D6 12px 24px);display:grid;place-items:center;color:#A0927C;font-family:"Outfit",sans-serif;font-weight:600;font-size:.85rem;box-shadow:0 14px 30px -20px rgba(22,35,31,.4)}
+  .course .cimg img{width:100%;height:100%;object-fit:cover;display:block}
+  .course h3{font-size:1.05rem;margin:14px 0 4px;line-height:1.25}
+  .course p{font-size:.92rem;line-height:1.5}
+  @media(max-width:960px){.courses{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:420px){.courses{gap:22px 14px}.course h3{font-size:.95rem}.course p{font-size:.85rem}}
+
+  .avatar.init{display:grid;place-items:center;border:0;background:var(--coral-soft);color:var(--coral);font-family:"Outfit",sans-serif;font-weight:800}
+  .faq details p+p{margin-top:10px}
 
   /* mobile menu */
   nav{position:relative;z-index:40}
@@ -267,41 +262,12 @@
     .dd .menu::before{display:none}
   }
   @media(max-width:420px){.navcta{padding:9px 14px;font-size:.88rem}.brand .e{width:36px;height:36px;font-size:1.35rem}}
-
-  /* review carousel */
-  .rv{background:var(--surface);border-radius:var(--radius);padding:30px;box-shadow:0 14px 34px -22px rgba(22,35,31,.35);display:flex;flex-direction:column;gap:20px;margin:0;min-width:0}
-  .rv blockquote{margin:0;display:flex;flex-direction:column;gap:12px}
-  .rv blockquote p{color:var(--ink);font-size:1rem;line-height:1.65}
-  .rv blockquote p:first-child::before{content:"“";font-family:"Outfit",sans-serif;font-size:3rem;line-height:0;vertical-align:-.45em;color:var(--coral);margin-right:4px}
-  .rv figcaption{display:flex;align-items:center;gap:12px;margin-top:auto;font-family:"Outfit",sans-serif;font-weight:700}
-  .rv figcaption small{display:block;font-weight:400;color:var(--muted)}
-  .carousel{position:relative;margin-top:36px}
-  .track{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 22px)/2);gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:4px 2px 22px;scrollbar-width:none}
-  .track::-webkit-scrollbar{display:none}
-  .track .rv{scroll-snap-align:start}
-  .cnav{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:6px}
-  .dots{display:flex;gap:8px;flex-wrap:wrap}
-  .dots button{width:10px;height:10px;border-radius:50%;border:0;padding:0;background:#D8CCB8;cursor:pointer}
-  .dots button[aria-current="true"]{background:var(--teal);width:26px;border-radius:999px}
-  .arrows{display:flex;gap:10px}
-  .arrows button{width:46px;height:46px;border-radius:50%;border:2px solid var(--teal);background:var(--surface);color:var(--teal-dark);font-size:1.2rem;cursor:pointer;display:grid;place-items:center}
-  .arrows button:hover{background:#E8F1F2}
-  .arrows button:disabled{opacity:.35;cursor:default}
-  .count{font-family:"Outfit",sans-serif;font-weight:600;color:var(--muted);font-size:.9rem;font-variant-numeric:tabular-nums}
-  @media(max-width:760px){.track{grid-auto-columns:100%}.rv{padding:24px}}
-  @media(prefers-reduced-motion:reduce){.track{scroll-behavior:auto}}
-  /* featured reviews (home) */
-  .featured-rv{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:36px;align-items:stretch}
-  
-  .rv .since{display:inline-block;align-self:flex-start;background:var(--coral-soft);color:#9A4A30;font-family:"Outfit",sans-serif;font-weight:700;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:999px}
-  @media(max-width:860px){.featured-rv{grid-template-columns:1fr}}
-  .avatar.init{display:grid;place-items:center;border:0;background:var(--coral-soft);color:var(--coral);font-family:"Outfit",sans-serif;font-weight:800;width:44px;height:44px;border-radius:50%;flex:none}
 </style>
 </head>
 <body>
 
 <div class="demobar">
-  <span><strong>DEMO: Home page</strong> · a draft for discussion, not live</span>
+  <span><strong>DEMO: Self-Study page rewrite</strong> · a draft for discussion, not live</span>
 </div>
 
 <nav>
@@ -316,32 +282,88 @@
 <header class="hero">
   <div class="wrap">
     <div>
-      <div class="eyebrow">English Evolution</div>
-      <h1>Real English for <em>real conversations.</em></h1>
-      <p class="lede">Learn English the way people actually speak it. Study on your own, or practice speaking live with me in a small group.</p>
+      <div class="eyebrow">Self-Study Academy</div>
+      <h1>Learn English the way people <em>really</em> speak it.</h1>
+      <p class="lede">Every course I've made, in one place. No textbook English, no AI slop. Natural contemporary American English. Learn at your own pace for $19 a month.</p>
       <div class="ctarow">
-        <a class="btn" href="#compare">See options</a>
+        <a class="btn" href="#compare">Start for $19/month</a>
         <a class="link" href="#youtube-link" target="_blank" rel="noopener">Watch a free lesson now →</a>
       </div>
-      <div class="checks"><span>Lower intermediate to upper advanced</span><span>Natural American English</span><span>New lessons every month</span></div>
+      <div class="checks"><span>Cancel anytime</span><span>New lessons every month</span></div>
     </div>
     <div class="mascot"><img src="data:image/jpeg;base64,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" alt="English Evolution lizard mascot on a branch"></div>
   </div>
 </header>
 
-<!-- BASICS -->
-<section class="familiar basics">
+<!-- HOW I TEACH -->
+<section class="teach">
   <div class="wrap">
-    <div class="eyebrow">The basics</div>
-    <h2>Language is not a subject. It's a skill.</h2>
-    <p class="basics-lede">We only get better at skills by practicing them.</p>
-    <div class="ifthen">
-      <div class="it"><span>If you want to turn passive vocabulary into active vocabulary</span><b>Speak often on a variety of topics.</b></div>
-      <div class="it"><span>If you want to sound more natural</span><b>Don't overcomplicate it. Copy native patterns.</b></div>
-      <div class="it"><span>If you want to fix habitual mistakes</span><b>Catch them and correct them in the moment.</b></div>
-      <div class="it"><span>If you want to get comfortable making small talk</span><b>Practice small talk regularly.</b></div>
+    <div class="photo" style="padding:0;overflow:hidden"><img src="images/anming-headshot.jpg" alt="Anming" style="width:100%;height:100%;object-fit:cover;object-position:50% 35%"></div>
+    <div>
+      <div class="eyebrow">How I teach</div>
+      <h2>I am not an English major. That's why this works.</h2>
+      <p class="story">I moved abroad and started teaching with <strong>zero experience</strong>. I had to find out what actually helps people speak, so that's all I teach. No dictionary English. No outdated grammar-book rules. <strong>I won't waste your time.</strong></p>
+      <div class="grid2">
+        <div class="card"><h3>Context first, rules second</h3><p>You see how English is used in real life first. The rule makes sense after that.</p></div>
+        <div class="card"><h3>Real English, not textbook English</h3><p>You learn what native speakers actually say, not what the book says they say.</p></div>
+        <div class="card"><h3>Stories, not memorizing</h3><p>Grammar and vocabulary stay in your head because you learn them inside a story.</p></div>
+        <div class="card"><h3>Hard things, made simple</h3><p>I take confusing topics and make them clear.</p></div>
+      </div>
     </div>
-    <p class="bridge">You don't need more understanding and analysis. You need active listening and a regular speaking habit.</p>
+  </div>
+</section>
+
+<!-- WHAT'S INSIDE -->
+<section class="inside">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow">What's inside</div>
+      <h2>Everything I've built. One small price.</h2>
+      <p>Years of lessons, organized by topic. Start with the orientation. It helps you find your place.</p>
+    </div>
+    <div class="courses">
+      <div class="course"><div class="cimg"><img src="images/courses/academy-orientation.jpg" alt="Academy Orientation course cover" loading="lazy"></div><h3>Academy Orientation</h3><p>Start here. Find your first course and next steps.</p></div>
+      <div class="course"><div class="cimg"><img src="images/courses/core-grammar.jpg" alt="Core Grammar course cover" loading="lazy"></div><h3>Core Grammar</h3><p>Weekly grammar lessons to fill in the gaps in your foundation.</p></div>
+      <div class="course"><div class="cimg"><img src="images/courses/secrets-to-fluency.jpg" alt="Secrets to Fluency course cover" loading="lazy"></div><h3>Secrets to Fluency</h3><p>The real answer to "How do I improve my English?"</p></div>
+      <div class="course"><div class="cimg"><img src="images/courses/real-talk.jpg" alt="Real Talk course cover" loading="lazy"></div><h3>Real Talk</h3><p>Casual American English they don't teach in school.</p></div>
+      <div class="course"><div class="cimg"><img src="images/courses/getting-get.jpg" alt="Getting Get course cover" loading="lazy"></div><h3>Getting Get</h3><p>100 ways to use "get." A downloadable audio course.</p></div>
+      <div class="course"><div class="cimg"><img src="images/courses/phrasal-verbs.jpg" alt="Phrasal Verbs course cover" loading="lazy"></div><h3>Phrasal Verbs</h3><p>Context first. In-depth meaning and usages explained simply.</p></div>
+      <div class="course"><div class="cimg"><img src="images/courses/accent-accelerator.jpg" alt="90-Day American Accent Accelerator course cover" loading="lazy"></div><h3>90-Day American Accent Accelerator</h3><p>Master English pronunciation to sound clear and natural. A downloadable audio course.</p></div>
+      <div class="course"><div class="cimg"><img src="images/courses/storycraft.jpg" alt="StoryCraft course cover" loading="lazy"></div><h3>StoryCraft</h3><p>Learn grammar and vocabulary through stories. Not boring.</p></div>
+    </div>
+    <div class="tour">
+      <div class="video"><div><div class="play">▶</div>Take a 2-minute tour of the academy<br><small style="opacity:.7">Screen recording goes here</small></div></div>
+      <ul class="included">
+        <li>Digital Library of courses</li>
+        <li>Recordings and PDFs for every lesson</li>
+        <li>Online Community Space</li>
+        <li>New lessons every month, no extra cost</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- PROMISE -->
+<section class="promise">
+  <div class="wrap">
+    <div>
+      <h2>New lessons every month.</h2>
+    </div>
+    <p>The library keeps growing. When I make something new, you get it automatically at no extra cost.</p>
+  </div>
+</section>
+
+<!-- OUTCOMES -->
+<section class="outcomes-sec">
+  <div class="wrap">
+    <div class="eyebrow">Results</div>
+    <h2>What you will learn</h2>
+    <div class="outs">
+      <div class="card"><h3>Understand English the way native speakers actually use it</h3><p>Learn phrasal verbs, "get," and everyday casual expressions.</p></div>
+      <div class="card"><h3>Use grammar without stopping to think</h3><p>Listen repeatedly to stories, so it stays in your head.</p></div>
+      <div class="card"><h3>Sound clearer and more natural</h3><p>The accent course helps people understand you the first time.</p></div>
+      <div class="card"><h3>Finish what you start</h3><p>Community and special challenges help you stay on track.</p></div>
+    </div>
   </div>
 </section>
 
@@ -377,35 +399,40 @@
         <tr><th scope="row">When you learn</th><td><span class="txt">Anytime, at your own pace</span></td><td class="g"><span class="txt">Live, at set class times</span></td></tr>
         <tr><th scope="row">Best for</th><td><span class="txt">Learning native English on your own schedule</span></td><td class="g"><span class="txt">Speaking with confidence, with real people</span></td></tr>
       </tbody>
-      <tfoot><tr><td></td><td><a class="btn ghost" href="self-study-demo.html">See Self-Study</a></td><td class="g"><a class="btn" href="group-classes-demo.html">See Group Classes</a></td></tr></tfoot>
+      <tfoot><tr><td></td><td><a class="btn ghost" href="#">Start Self-Study</a></td><td class="g"><a class="btn" href="group-classes-demo.html">Join Group Classes</a></td></tr></tfoot>
     </table>
     <p class="cnote"><strong>Group Classes include everything in Self-Study.</strong> You never pay for both. Many students start with Self-Study and join a class later.</p>
-
+    <span id="join"></span>
   </div>
 </section>
 
-<!-- TESTIMONIAL -->
+<!-- TESTIMONIALS -->
 <section class="quotes">
   <div class="wrap">
     <div class="eyebrow">Reviews</div>
     <h2>What students say</h2>
-    <div class="featured-rv">
-      <figure class="rv big"><span class="since">5+ years with Anming</span><blockquote><p>I’ve been learning with Anming for over five years now, and I can honestly say she’s the best English teacher I’ve ever had. Her lessons strike the perfect balance between structure and comfort — always casual, relaxing, and yet incredibly effective. What sets Anming apart is how much she genuinely cares about her students. She creates highly engaging grammar and vocabulary lessons and has recorded countless audio files that have been incredibly helpful for practicing outside of class.</p></blockquote><figcaption><span class="avatar init">T</span><span>Tom<small>Czech Republic</small></span></figcaption></figure>
-      <figure class="rv"><span class="since">Group Classes student</span><blockquote><p>At first, I thought one-to-one lessons would be better. But during classes, I realized that being with other students, you have plenty of rich sources to learn from. My classmates have different points of view and I’ve also learned a lot from their English. I met wonderful people in the class and we chat together at least once a week via a platform that Anming provided us with to improve our conversation skills. So, in my opinion, being in such a class environment is more beneficial than taking a private class from any teacher.</p></blockquote><figcaption><span class="avatar init">E</span><span>Elif<small>Turkey</small></span></figcaption></figure>
+    <div class="qgrid">
+      <div class="quote"><p>I have had many difficulties to improve my English; among them is to understand nuanced differences in the meaning of words, phrases etc. Anming’s explanations are crystal clear and uncomplicated with real life scenarios in her examples and stories. I found that things just stuck with me without thinking about them too much. I can say the same with grammar. In no time, her explanation clears everything up. Last but not at least, I think her videos and her teaching method are entertaining - she is funny and approachable. In my view she is an exceptional, excellent teacher.</p><div class="who"><span class="avatar init">A</span><span>Agnes<small>Self-Study student</small></span></div></div>
+      <div class="quote"><p>I genuinely love being part of the Academy. The structure, the clarity of instruction, and the way you made language learning both engaging and practical—it all resonated with me deeply. As someone who’s passionate about language and communication, I found your platform to be one of the most effective and inspiring I’ve come across. In terms of feedback, I honestly wouldn’t change much. The Academy felt well thought-out and supportive. Thanks again for all the effort you put into the program. It’s made a lasting impact on me.</p><div class="who"><span class="avatar init">G</span><span>Guillermo<small>Self-Study student</small></span></div></div>
+      <div class="quote"><p>Anming has done an outstanding job building the website English Evolution. If you are willing to invest extra time, and you should, there are tons of good ideas and tools you can use by yourself. Anming is a great partner for this adventure. She has helped me move forward when I needed it the most.</p><div class="who"><span class="avatar init">F</span><span>Francisco<small>Self-Study student</small></span></div></div>
     </div>
   </div>
 </section>
 
-<!-- FINAL CTA -->
-<section class="final">
+<!-- FAQ -->
+<section class="faq">
   <div class="wrap">
-    <div class="box" style="grid-template-columns:1fr">
-      <div>
-        <h2>You already have English in your ear.<br>You have to speak to get it in your mouth.</h2>
-        <p>Start with Self-Study, or practice speaking live in a Group Class.</p>
-        <div class="ctarow"><a class="btn" href="group-classes-demo.html">See Group Classes</a><a class="link" href="self-study-demo.html">See Self-Study →</a></div>
-      </div>
-    </div>
+    <div class="eyebrow">Questions</div>
+    <h2>Before you join</h2>
+    <details><summary>What level do I need?</summary><p>These lessons are for intermediate to advanced students who want to improve conversational English, accuracy, and pronunciation. Some courses review basic points, but the Academy is not for absolute beginners. All instruction is in English.</p></details>
+    <details><summary>How are the lessons structured?</summary><p>Course formats vary. Some courses are video-based, some text-based, and some audio-based. Most courses have short, downloadable audios for each lesson, so you can listen while driving, walking or doing chores.</p></details>
+    <details><summary>How often are new lessons uploaded?</summary><p>Generally, I upload new content monthly, although priorities shift from month to month. I create everything, from the short videos to the lessons themselves.</p></details>
+    <details><summary>Will I get homework or practice tasks?</summary><p>There are quizzes and practice activities, and I offer recommendations about how to use the materials to get the most out of them.</p></details>
+    <details><summary>How do I measure my progress?</summary><p>All digital courses have practice tests. After each lesson, take the quiz to test your understanding.</p><p>But the best way to judge your progress is to watch yourself speak. Choose a topic you know a lot about, hit record on your phone, and speak without preparation for 1 minute. It can be uncomfortable, and most people won't do it. If you want faster progress than average, do what the average person refuses to do.</p></details>
+    <details><summary>How long will it take to see results?</summary><p>Moving up one level (for example, B2 to C1) takes about 200–250 hours. At 5 hours a week, that's about a year. At 10 hours a week, it's about 5 to 6 months. Those hours have to be productive to count: watching Netflix doesn't count, but active conversation practice does.</p></details>
+    <details><summary>Can I talk to Anming?</summary><p>Yes. Ask your questions in the Online Community Space and I answer them. If you want live practice with me, join a group class.</p></details>
+    <details><summary>Can I move to group classes later?</summary><p>Absolutely, and I'm happy to work with you financially to make the transition fair. Group classes have limited spots, and we'll meet before you switch to discuss the details.</p></details>
+    <details><summary>Can I get a refund?</summary><p>Full refunds are available within 14 days of purchase, but not if you have already accessed course materials. If your situation changes, I can often apply your payment to another program.</p></details>
   </div>
 </section>
 

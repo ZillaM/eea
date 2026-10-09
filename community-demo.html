@@ -1,0 +1,1744 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>English Evolution Community</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Layout: mobile-first single column; member area = header + section tabs (bottom bar on phones); admin = same shell with its own tabs.
+     Tokens copied from the existing English Evolution site so the community reads as part of it. Single light look, as on the main site. */
+  :root{
+    --bg:#FBF6EE; --surface:#FFFDF9; --sand:#F2E9DA; --line:#EAE0CE; --ink:#16231F; --muted:#4F5B57; --faint:#7C847F;
+    --teal:#3A7F8C; --teal-dark:#2E6874; --teal-soft:#E6F0F1; --coral:#E3997E; --coral-soft:#FBE7DE; --coral-ink:#9A4A30;
+    --note-bg:#FFF4D6; --note-border:#E3B53E; --note-ink:#5A4A1A;
+    --danger:#B4473A; --danger-soft:#F8E1DD; --ok:#2F7A55; --ok-soft:#E1F1E8;
+    --radius:20px; --display:"Outfit",system-ui,sans-serif; --body:"Open Sans",system-ui,sans-serif;
+    color-scheme:light;
+  }
+  *{box-sizing:border-box}
+  html,body{background:var(--bg)}
+  body{margin:0;color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-text-size-adjust:100%}
+  h1,h2,h3,h4,.btn,.eyebrow,.brand,.tab,.chip{font-family:var(--display)}
+  h1,h2,h3{margin:0;text-wrap:balance}
+  h1{font-size:clamp(1.9rem,6vw,3rem);line-height:1.08;letter-spacing:-.02em;font-weight:800}
+  h2{font-size:clamp(1.4rem,4.2vw,2rem);line-height:1.15;letter-spacing:-.01em;font-weight:800}
+  h3{font-size:1.12rem;font-weight:700;line-height:1.3}
+  p{margin:0;color:var(--muted)}
+  a{color:var(--teal-dark)}
+  button{font:inherit}
+  .wrap{max-width:1040px;margin:0 auto;padding-inline:16px}
+  @media(min-width:700px){.wrap{padding-inline:24px}}
+  .stack{display:flex;flex-direction:column;gap:16px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .muted{color:var(--muted)} .small{font-size:.88rem} .faint{color:var(--faint)}
+  .eyebrow{display:flex;align-items:center;gap:12px;color:var(--teal);font-weight:600;font-size:.8rem;letter-spacing:.09em;text-transform:uppercase}
+  .eyebrow::before{content:"";width:36px;height:3px;border-radius:3px;background:var(--coral)}
+  :focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+
+  /* buttons */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--teal);color:#fff;text-decoration:none;font-weight:600;font-size:1rem;padding:14px 24px;border-radius:999px;border:0;cursor:pointer;box-shadow:0 10px 22px -12px rgba(58,127,140,.8);transition:background .15s,transform .15s;min-height:48px;text-align:center}
+  .btn:hover{background:var(--teal-dark)}
+  .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:transparent;color:var(--teal-dark);box-shadow:none;border:2px solid var(--teal)}
+  .btn.ghost:hover{background:var(--teal-soft)}
+  .btn.coral{background:var(--coral);color:var(--ink);box-shadow:0 10px 22px -12px rgba(227,153,126,.9)}
+  .btn.coral:hover{background:#DB8A6C}
+  .btn.danger{background:var(--danger);box-shadow:none}
+  .btn.sm{padding:8px 16px;font-size:.9rem;min-height:38px}
+  .btn.block{width:100%}
+  .btn[disabled]{opacity:.45;cursor:default}
+  .linkbtn{background:none;border:0;padding:6px 2px;color:var(--teal-dark);font-weight:600;cursor:pointer;font-family:var(--display);font-size:.9rem;text-decoration:none}
+  .linkbtn:hover{text-decoration:underline}
+  .linkbtn.quiet{color:var(--faint);font-weight:600}
+  .linkbtn.red{color:var(--danger)}
+
+  /* form */
+  label.lab{display:block;font-family:var(--display);font-weight:700;font-size:.95rem;margin-bottom:6px}
+  .hint{font-size:.85rem;color:var(--faint);margin-top:6px}
+  .input,textarea.input,select.input{width:100%;font:inherit;font-size:16px;color:var(--ink);background:#fff;border:2px solid var(--line);border-radius:14px;padding:12px 14px;transition:border-color .15s}
+  .input:focus{outline:none;border-color:var(--teal)}
+  textarea.input{min-height:120px;resize:vertical;line-height:1.5}
+  .field{display:flex;flex-direction:column}
+  .err{color:var(--danger);font-size:.88rem;margin-top:6px}
+
+  /* demo bar + notes (same convention as the other demo pages) */
+  .demobar{position:relative;z-index:80;background:var(--ink);color:#F2E9DA;font-size:.82rem;padding:8px 16px;display:flex;justify-content:space-between;align-items:center;gap:8px 14px;flex-wrap:wrap}
+  .demobar strong{color:#fff}
+  .roles{display:flex;gap:4px;background:rgba(255,255,255,.08);padding:3px;border-radius:999px;flex-wrap:wrap}
+  .roles button{background:none;border:0;color:#E9E1D2;padding:5px 12px;border-radius:999px;cursor:pointer;font-family:var(--display);font-weight:600;font-size:.82rem}
+  .roles button[aria-pressed="true"]{background:#F2E9DA;color:var(--ink)}
+  .demotools{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+  .toggle{background:var(--note-border);color:var(--ink);border:0;border-radius:999px;padding:5px 12px;font-weight:700;font-family:var(--display);cursor:pointer;font-size:.82rem}
+  .toggle.dim{background:transparent;color:#E9E1D2;border:1px solid rgba(255,255,255,.3)}
+  .note{background:var(--note-bg);border:2px dashed var(--note-border);border-radius:14px;padding:12px 16px;font-size:.88rem;color:var(--note-ink);line-height:1.5}
+  .note b.t{display:block;font-family:var(--display);color:#8A6A10;font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;margin-bottom:3px}
+  .note p{color:var(--note-ink)}
+  .note code{background:rgba(227,181,62,.2);padding:0 4px;border-radius:4px;font-size:.85em}
+  body.clean .note{display:none}
+
+  /* site nav */
+  .topnav{background:var(--surface);border-bottom:1px solid var(--line)}
+  .topnav .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:68px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:400;font-size:.92rem;line-height:1.05;letter-spacing:.12em;color:var(--ink);text-decoration:none;background:none;border:0;cursor:pointer;padding:0;text-align:left}
+  .brand .e{width:40px;height:40px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:800;font-size:1.5rem;letter-spacing:0;flex:none}
+  .brand .tagc{display:block;font-weight:700;letter-spacing:.08em;font-size:.68rem;color:var(--teal);margin-top:3px;text-transform:uppercase}
+  .navright{display:flex;align-items:center;gap:12px}
+  .navmore{font-family:var(--display);font-weight:600;font-size:.92rem;color:var(--muted);text-decoration:none;background:none;border:0;cursor:pointer}
+  .navmore:hover{color:var(--ink)}
+  @media(max-width:520px){.hide-sm{display:none}}
+  .navlinks{display:flex;gap:26px;font-family:var(--display);font-weight:600;align-items:center}
+  .navlinks a{color:var(--ink);text-decoration:none}
+  .navlinks a.cur{color:var(--teal-dark);box-shadow:inset 0 -3px 0 var(--coral)}
+  .navlinks .mobonly{display:none}
+  .navcta{padding:10px 20px;font-size:.95rem;min-height:0}
+  .dd{position:relative}
+  .dd>button{background:none;border:0;font:inherit;color:var(--ink);cursor:pointer;padding:0;display:flex;align-items:center;gap:6px}
+  .dd>button::after{content:"";width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-3px)}
+  .dd .ddmenu{position:absolute;top:calc(100% + 14px);left:-18px;min-width:230px;background:var(--surface);border-radius:14px;box-shadow:0 18px 40px -18px rgba(22,35,31,.45);padding:8px;display:none;z-index:60}
+  .dd .ddmenu::before{content:"";position:absolute;left:0;right:0;top:-14px;height:14px}
+  .dd:hover .ddmenu,.dd.open .ddmenu,.dd:focus-within .ddmenu{display:block}
+  .dd .ddmenu a{display:block;padding:10px 14px;border-radius:10px}
+  .dd .ddmenu a:hover{background:var(--sand)}
+  .dd .ddmenu small{display:block;font-family:var(--body);font-weight:400;color:var(--muted);font-size:.82rem}
+  .topnav{position:relative;z-index:40}
+  .menubtn{display:none;align-items:center;gap:8px;background:none;border:2px solid var(--ink);color:var(--ink);border-radius:999px;padding:8px 14px;font-family:var(--display);font-weight:700;font-size:.92rem;cursor:pointer}
+  .menubtn span{display:block;width:16px;height:2px;background:currentColor;box-shadow:0 5px 0 currentColor,0 -5px 0 currentColor}
+  @media(max-width:960px){
+    .menubtn{display:inline-flex}
+    .navlinks{display:none;position:absolute;top:100%;left:0;right:0;background:var(--surface);flex-direction:column;align-items:stretch;gap:0;padding:8px 20px 18px;box-shadow:0 18px 30px -20px rgba(22,35,31,.45);border-top:1px solid var(--line)}
+    .topnav.open .navlinks{display:flex}
+    .navlinks>a,.dd>button{padding:12px 0;border-bottom:1px solid var(--line);width:100%;text-align:left}
+    .navlinks a.cur{box-shadow:none}
+    .navlinks .mobonly{display:block}
+    .dd>button{pointer-events:none}
+    .dd>button::after{display:none}
+    .dd .ddmenu{display:block;position:static;box-shadow:none;background:none;padding:4px 0 8px 12px;min-width:0}
+    .dd .ddmenu::before{display:none}
+  }
+  @media(max-width:420px){.navcta{padding:8px 14px;font-size:.88rem}.brand .e{width:36px;height:36px;font-size:1.35rem}.menubtn{padding:7px 11px}}
+  .mebtn{display:flex;align-items:center;gap:8px;background:none;border:2px solid var(--line);border-radius:999px;padding:3px 12px 3px 3px;cursor:pointer;font-family:var(--display);font-weight:600;font-size:.9rem;color:var(--ink)}
+  .mebtn:hover{border-color:var(--teal)}
+
+  /* section tabs: top row on desktop, bottom bar on phones */
+  .tabs{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:30}
+  .tabs .wrap{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+  .tabs .wrap::-webkit-scrollbar{display:none}
+  .tab{display:flex;align-items:center;gap:8px;background:none;border:0;border-bottom:3px solid transparent;padding:14px 12px 11px;cursor:pointer;color:var(--muted);font-weight:600;font-size:.95rem;white-space:nowrap}
+  .tab svg{width:20px;height:20px;flex:none}
+  .tab:hover{color:var(--ink)}
+  .tab[aria-current="page"]{color:var(--teal-dark);border-bottom-color:var(--teal)}
+  .tab .count{background:var(--coral);color:var(--ink);border-radius:999px;font-size:.72rem;padding:1px 7px;font-weight:800}
+  @media(max-width:760px){
+    .tabs.member{position:fixed;top:auto;bottom:0;left:0;right:0;border-bottom:0;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);box-shadow:0 -10px 24px -18px rgba(22,35,31,.4)}
+    .tabs.member .wrap{padding-inline:4px;gap:0;justify-content:space-around}
+    .tabs.member .tab{flex-direction:column;gap:2px;font-size:.7rem;padding:9px 4px 8px;border-bottom:0;border-top:3px solid transparent;flex:1;min-width:0}
+    .tabs.member .tab[aria-current="page"]{border-top-color:var(--teal);border-bottom-color:transparent}
+    .tabs.member .tab .full{display:none}
+    body.has-bottom main{padding-bottom:96px}
+  }
+  @media(min-width:761px){.tabs.member .tab .short{display:none}}
+
+  main{padding-block:28px 64px}
+  @media(min-width:700px){main{padding-block:40px 80px}}
+
+  /* generic blocks */
+  .panel{background:var(--surface);border-radius:var(--radius);padding:20px;box-shadow:0 14px 34px -24px rgba(22,35,31,.4)}
+  @media(min-width:700px){.panel{padding:26px}}
+  .rule{display:flex;gap:12px;align-items:flex-start;background:var(--teal-soft);border-radius:16px;padding:14px 16px;color:var(--teal-dark);font-size:.95rem}
+  .rule svg{flex:none;width:22px;height:22px;margin-top:1px}
+  .rule p{color:var(--teal-dark)}
+  .rule strong{font-family:var(--display)}
+  .chip{display:inline-flex;align-items:center;gap:6px;background:var(--sand);color:var(--ink);font-weight:700;font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;white-space:nowrap}
+  .chip.teal{background:var(--teal);color:#fff}
+  .chip.coral{background:var(--coral-soft);color:var(--coral-ink)}
+  .chip.ok{background:var(--ok-soft);color:var(--ok)}
+  .chip.red{background:var(--danger-soft);color:var(--danger)}
+  .back{display:inline-flex;align-items:center;gap:6px;font-family:var(--display);font-weight:600;color:var(--muted);background:none;border:0;cursor:pointer;padding:0;font-size:.95rem}
+  .back:hover{color:var(--ink)}
+  .pagehead{display:flex;flex-direction:column;gap:10px}
+  .pagehead p{font-size:1.05rem}
+  hr.sep{border:0;border-top:1px solid var(--line);margin:4px 0}
+
+  /* avatars */
+  .av{border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:800;color:var(--ink);overflow:hidden;background:var(--sand)}
+  .av img{width:100%;height:100%;object-fit:cover}
+  .av.anming img{object-position:50% 30%;transform:scale(1.35);transform-origin:48% 32%}
+  .who{display:flex;align-items:center;gap:10px;min-width:0}
+  .who b{font-family:var(--display);font-size:.98rem;display:block;line-height:1.2}
+  .who small{display:block;color:var(--faint);font-size:.82rem}
+  .who .badge{display:inline-block;margin-left:6px;background:var(--ink);color:#fff;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:999px;vertical-align:2px;font-family:var(--display)}
+
+  /* ===== public welcome ===== */
+  .hero{position:relative;overflow:hidden;padding-block:40px 48px}
+  .hero::before{content:"";position:absolute;left:-200px;top:-180px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(58,127,140,.22),transparent 65%)}
+  .hero::after{content:"";position:absolute;right:-180px;bottom:-240px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(227,153,126,.26),transparent 65%)}
+  .hero .wrap{position:relative;z-index:1;display:grid;gap:28px}
+  @media(min-width:880px){.hero .wrap{grid-template-columns:1.2fr .9fr;align-items:center;gap:48px}.hero{padding-block:64px 72px}}
+  .hero h1 em{font-style:normal;color:var(--teal)}
+  .hero .lede{font-size:1.12rem;max-width:560px}
+  .freepill{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#fff;font-family:var(--display);font-weight:700;font-size:.85rem;padding:6px 14px;border-radius:999px;align-self:flex-start}
+  .freepill i{width:8px;height:8px;border-radius:50%;background:#7FD4B0;display:block}
+  .ytbox{background:var(--surface);border-radius:var(--radius);padding:22px;box-shadow:0 24px 48px -30px rgba(22,35,31,.5);display:flex;flex-direction:column;gap:14px;border-top:5px solid var(--coral)}
+  .ytbox h3{font-size:1.25rem}
+  .lockres{display:flex;flex-direction:column;gap:8px}
+  .lockres .lr{display:flex;justify-content:space-between;gap:10px;align-items:center;background:var(--bg);border-radius:12px;padding:10px 12px;font-size:.92rem}
+  .lockres .lr b{font-family:var(--display);font-weight:700;min-width:0}
+  .lockres .lr span{font-size:.78rem;color:var(--faint);white-space:nowrap}
+  section.band{padding-block:48px}
+  @media(min-width:700px){section.band{padding-block:72px}}
+  section.band.sand{background:var(--sand)}
+  .feat{display:grid;gap:14px;margin-top:28px;grid-template-columns:1fr}
+  @media(min-width:640px){.feat{grid-template-columns:1fr 1fr}}
+  @media(min-width:960px){.feat{grid-template-columns:repeat(3,1fr)}}
+  .feat .panel{display:flex;flex-direction:column;gap:8px}
+  .ico{width:44px;height:44px;border-radius:14px;background:var(--coral-soft);color:var(--coral-ink);display:grid;place-items:center;flex:none}
+  .ico svg{width:24px;height:24px}
+  .ico.teal{background:var(--teal-soft);color:var(--teal-dark)}
+  .waylist{display:grid;gap:12px;margin-top:24px}
+  @media(min-width:760px){.waylist{grid-template-columns:1fr 1fr}}
+  .way{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border-radius:16px;padding:16px}
+  .way .x{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-family:var(--display);font-size:.9rem}
+  .way .x.y{background:var(--ok-soft);color:var(--ok)} .way .x.n{background:var(--danger-soft);color:var(--danger)}
+  .way b{font-family:var(--display);display:block}
+  .paidrow{display:grid;gap:14px;margin-top:22px}
+  @media(min-width:700px){.paidrow{grid-template-columns:1fr 1fr}}
+  .paid{display:flex;justify-content:space-between;gap:14px;align-items:center;border:2px solid var(--line);border-radius:16px;padding:16px 18px;background:var(--surface)}
+  .paid b{font-family:var(--display);font-size:1.05rem;display:block}
+  .paid .price{font-family:var(--display);font-weight:800;color:var(--ink);white-space:nowrap}
+  .paid .price small{font-weight:600;color:var(--faint)}
+
+  /* ===== auth ===== */
+  .authcard{max-width:480px;margin:0 auto}
+  .fine{font-size:.86rem;color:var(--muted);background:var(--bg);border-radius:12px;padding:12px 14px;display:flex;gap:10px}
+  .fine svg{flex:none;width:18px;height:18px;margin-top:2px;color:var(--teal)}
+  .steps3{display:flex;gap:6px;justify-content:center;margin-bottom:6px}
+  .steps3 i{height:5px;width:44px;border-radius:5px;background:var(--line);display:block}
+  .steps3 i.on{background:var(--teal)}
+  .mail{border:1px solid var(--line);border-radius:18px;background:#fff;overflow:hidden;box-shadow:0 20px 40px -30px rgba(22,35,31,.5)}
+  .mail .mh{padding:12px 16px;background:var(--bg);font-size:.82rem;color:var(--muted);border-bottom:1px solid var(--line)}
+  .mail .mh b{color:var(--ink)}
+  .mail .mb{padding:20px 18px;display:flex;flex-direction:column;gap:12px;font-size:.95rem}
+  .mail .mf{padding:12px 18px;font-size:.75rem;color:var(--faint);border-top:1px solid var(--line)}
+  .photoedit{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+
+  /* ===== member home ===== */
+  .finder{background:var(--ink);color:#fff;border-radius:26px;padding:26px 20px 22px;position:relative;overflow:hidden}
+  .finder::after{content:"";position:absolute;right:-120px;top:-140px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(58,127,140,.55),transparent 65%);pointer-events:none}
+  .finder > *{position:relative;z-index:1}
+  @media(min-width:700px){.finder{padding:40px 40px 32px}}
+  .finder .eyebrow{color:#F1C24B}
+  .finder h1{color:#fff;margin-top:10px}
+  .finder .sub{color:#D9E4E1;font-size:1.05rem;margin-top:8px;max-width:620px}
+  .searchbar{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+  @media(min-width:640px){.searchbar{flex-direction:row;background:#fff;border-radius:999px;padding:6px;gap:6px}}
+  .searchbar .sfield{position:relative;flex:1;min-width:0}
+  .searchbar .sfield svg{position:absolute;left:18px;top:50%;transform:translateY(-50%);width:22px;height:22px;color:var(--teal-dark);pointer-events:none}
+  .searchbar input{width:100%;font:inherit;font-size:18px;border:0;border-radius:999px;padding:18px 18px 18px 52px;background:#fff;color:var(--ink);min-height:60px}
+  .searchbar input:focus{outline:3px solid var(--coral);outline-offset:2px}
+  @media(min-width:640px){.searchbar input:focus{outline:none}.searchbar:focus-within{outline:3px solid var(--coral);outline-offset:3px}}
+  .searchbar .btn{min-height:60px;font-size:1.05rem;letter-spacing:.04em;text-transform:uppercase;font-weight:700;padding-inline:28px;background:var(--coral);color:var(--ink);box-shadow:none}
+  .searchbar .btn:hover{background:#DB8A6C}
+  .tryline{margin-top:12px;font-size:.88rem;color:#BFCFCB;display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center}
+  .tryline button{background:rgba(255,255,255,.1);color:#fff;border:0;border-radius:999px;padding:4px 12px;cursor:pointer;font-size:.85rem}
+  .tryline button:hover{background:rgba(255,255,255,.2)}
+  .results{margin-top:18px;display:flex;flex-direction:column;gap:10px}
+  .results .rhead{font-size:.88rem;color:#BFCFCB;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .res{background:#fff;color:var(--ink);border-radius:16px;padding:14px 16px;display:grid;grid-template-columns:1fr;gap:10px;align-items:center}
+  @media(min-width:640px){.res{grid-template-columns:1fr auto}}
+  .res h3{font-size:1.08rem}
+  .res .meta{font-size:.82rem;color:var(--faint);margin-top:2px}
+  .res .meta i{font-style:normal;color:var(--muted)}
+  .res .acts{display:flex;gap:8px;flex-wrap:wrap}
+  .res mark{background:#FDE9A8;color:inherit;border-radius:3px;padding:0 1px}
+  .nores{background:rgba(255,255,255,.08);border-radius:16px;padding:16px;color:#E6EEEC;font-size:.95rem}
+  .nores b{color:#fff;font-family:var(--display)}
+  .nores button{background:none;border:0;color:#F1C24B;font-weight:700;cursor:pointer;padding:0;font:inherit;text-decoration:underline}
+
+  .promo{margin-top:22px;background:var(--surface);border-radius:var(--radius);overflow:hidden;display:grid;grid-template-columns:1fr;box-shadow:0 18px 40px -28px rgba(22,35,31,.55);border:2px solid var(--coral)}
+  .promo.has-img{grid-template-columns:1fr}
+  @media(min-width:700px){.promo.has-img{grid-template-columns:220px 1fr}}
+  .promo .pimg{background:var(--coral-soft);height:170px;overflow:hidden}
+  @media(min-width:700px){.promo .pimg{height:auto;min-height:100%}}
+  .promo .pimg img{width:100%;height:100%;object-fit:cover;display:block}
+  .promo .pbody{padding:20px;display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+  @media(min-width:700px){.promo .pbody{padding:24px 28px}}
+  .promo .ptag{font-family:var(--display);font-weight:700;font-size:.74rem;letter-spacing:.09em;text-transform:uppercase;color:var(--coral-ink);background:var(--coral-soft);padding:4px 10px;border-radius:999px}
+  .promo h2{font-size:clamp(1.25rem,3.4vw,1.6rem)}
+
+  .sectiongrid{display:grid;gap:14px;margin-top:14px}
+  @media(min-width:700px){.sectiongrid{grid-template-columns:1fr 1fr}}
+  .scard{background:var(--surface);border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;gap:10px;box-shadow:0 14px 34px -26px rgba(22,35,31,.45);border:0;text-align:left;cursor:pointer;color:inherit;transition:transform .15s,box-shadow .15s}
+  .scard:hover{transform:translateY(-2px);box-shadow:0 20px 36px -24px rgba(22,35,31,.5)}
+  .scard .top{display:flex;gap:12px;align-items:center}
+  .scard .go{margin-top:auto;font-family:var(--display);font-weight:700;color:var(--teal-dark);font-size:.92rem}
+  .lotw{background:var(--surface);border-radius:var(--radius);padding:20px;box-shadow:0 14px 34px -26px rgba(22,35,31,.45);display:grid;gap:16px}
+  @media(min-width:760px){.lotw{grid-template-columns:1.4fr 1fr;align-items:center;padding:26px}}
+  .lotw h2{font-size:clamp(1.3rem,3.6vw,1.7rem)}
+  .moreband{margin-top:34px;border-top:1px solid var(--line);padding-top:22px;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;font-size:.92rem;color:var(--muted)}
+  .moreband b{font-family:var(--display);color:var(--ink)}
+
+  /* ===== lessons ===== */
+  .lessonhero{display:grid;gap:18px}
+  .doccta{background:var(--teal);color:#fff;border-radius:var(--radius);padding:22px;display:flex;flex-direction:column;gap:12px}
+  .doccta p{color:#DCEDEF;font-size:.92rem}
+  .doccta .btn{background:#fff;color:var(--teal-dark);box-shadow:none;font-size:1.08rem;min-height:56px}
+  .doccta .btn:hover{background:#F2F8F8}
+  .assigncard{border:2px dashed var(--teal);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;gap:12px;background:var(--surface)}
+  .plist{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+  .plist li{color:var(--ink)}
+  .libitem{display:grid;grid-template-columns:1fr;gap:8px;padding:14px 0;border-bottom:1px solid var(--line);align-items:center}
+  @media(min-width:640px){.libitem{grid-template-columns:1fr auto}}
+  .libitem:last-child{border-bottom:0}
+  .libitem h3{font-size:1.05rem}
+  .libitem .meta{font-size:.82rem;color:var(--faint)}
+  .yearhead{font-family:var(--display);font-weight:800;color:var(--teal);font-size:.85rem;letter-spacing:.08em;padding-top:18px}
+
+  /* ===== posts ===== */
+  .post{background:var(--surface);border-radius:var(--radius);padding:18px;box-shadow:0 12px 30px -26px rgba(22,35,31,.45);display:flex;flex-direction:column;gap:12px}
+  .post .ph{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+  .post .body{color:var(--ink);white-space:pre-wrap;overflow-wrap:anywhere}
+  .post .pacts{display:flex;gap:4px 14px;flex-wrap:wrap;align-items:center;border-top:1px solid var(--line);padding-top:8px}
+  .post.mine{box-shadow:inset 0 0 0 2px var(--teal-soft),0 12px 30px -26px rgba(22,35,31,.45)}
+  .promptlabel{font-size:.82rem;color:var(--teal-dark);font-weight:600;font-family:var(--display)}
+  .fb{background:var(--teal-soft);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+  .fb .who b{color:var(--teal-dark)}
+  .fb .body{color:var(--ink)}
+  .answer{background:var(--teal-soft);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+  .answer .body{color:var(--ink)}
+  .replies{margin-left:12px;padding-left:14px;border-left:3px solid var(--line);display:flex;flex-direction:column;gap:12px}
+  .reply .body{font-size:.96rem}
+  .replybox{display:flex;flex-direction:column;gap:8px}
+  .qtitle{font-family:var(--display);font-weight:700;font-size:1.12rem;color:var(--ink);line-height:1.35}
+  .noreplies{font-size:.82rem;color:var(--faint);display:flex;gap:6px;align-items:center}
+  .noreplies svg{width:15px;height:15px}
+  .reportbox{background:var(--bg);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px}
+  .reportbox .opts{display:flex;flex-wrap:wrap;gap:6px}
+  .reportbox .opts label{display:flex;gap:6px;align-items:center;background:#fff;border:2px solid var(--line);border-radius:999px;padding:5px 12px;font-size:.88rem;cursor:pointer}
+  .reportbox .opts input{accent-color:var(--teal)}
+  .confirm{background:var(--danger-soft);border-radius:12px;padding:10px 12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.9rem;color:var(--danger)}
+
+  /* composer + recorder */
+  .composer{display:flex;flex-direction:column;gap:14px}
+  .seg{display:grid;grid-template-columns:1fr 1fr;background:var(--sand);border-radius:999px;padding:4px;gap:4px}
+  .seg button{border:0;background:none;border-radius:999px;padding:10px;font-family:var(--display);font-weight:700;cursor:pointer;color:var(--muted);display:flex;gap:8px;align-items:center;justify-content:center;min-height:44px}
+  .seg button svg{width:18px;height:18px}
+  .seg button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:0 4px 10px -6px rgba(22,35,31,.5)}
+  .choices{display:flex;flex-direction:column;gap:8px}
+  .choice{display:flex;gap:12px;align-items:flex-start;border:2px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer;background:#fff}
+  .choice input{margin-top:5px;accent-color:var(--teal);width:18px;height:18px;flex:none}
+  .choice:has(input:checked){border-color:var(--teal);background:var(--teal-soft)}
+  .choice span{color:var(--ink)}
+  .rec{background:var(--ink);border-radius:22px;padding:22px 18px;color:#fff;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+  .rec .clock{font-family:var(--display);font-weight:800;font-size:2.2rem;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+  .rec .clock small{font-size:1rem;color:#9FB2AD;font-weight:600}
+  .rec .lbl{color:#C9D6D2;font-size:.9rem}
+  .bigrec{width:84px;height:84px;border-radius:50%;border:0;background:var(--coral);display:grid;place-items:center;cursor:pointer;box-shadow:0 0 0 8px rgba(227,153,126,.18)}
+  .bigrec i{width:30px;height:30px;border-radius:50%;background:#C2412E;display:block}
+  .bigrec.stop i{border-radius:6px;width:28px;height:28px;background:#fff}
+  .bigrec.stop{background:#C2412E;animation:pulse 1.4s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(227,153,126,.6)}70%{box-shadow:0 0 0 18px rgba(227,153,126,0)}100%{box-shadow:0 0 0 0 rgba(227,153,126,0)}}
+  @media(prefers-reduced-motion:reduce){.bigrec.stop{animation:none}}
+  .meter{width:100%;max-width:340px;height:8px;border-radius:8px;background:rgba(255,255,255,.14);overflow:hidden}
+  .meter i{display:block;height:100%;background:var(--coral);width:0;transition:width .2s linear}
+  .bars{display:flex;gap:3px;align-items:center;height:36px}
+  .bars i{width:4px;border-radius:3px;background:var(--coral);display:block;transition:height .1s}
+  .rec .row{justify-content:center}
+  .rec .btn.ghost{color:#fff;border-color:rgba(255,255,255,.5)}
+  .rec .btn.ghost:hover{background:rgba(255,255,255,.08)}
+  .simnote{font-size:.8rem;color:#F1C24B}
+  .player{display:flex;align-items:center;gap:12px;background:var(--bg);border-radius:999px;padding:6px 16px 6px 6px;max-width:440px;width:100%}
+  .rec .player{background:rgba(255,255,255,.1)}
+  .player .pbtn{width:42px;height:42px;border-radius:50%;border:0;background:var(--teal);color:#fff;display:grid;place-items:center;cursor:pointer;flex:none}
+  .player .pbtn svg{width:18px;height:18px}
+  .player .track{flex:1;height:6px;border-radius:6px;background:var(--line);overflow:hidden;min-width:40px}
+  .rec .player .track{background:rgba(255,255,255,.2)}
+  .player .track i{display:block;height:100%;width:0;background:var(--teal)}
+  .rec .player .track i{background:var(--coral)}
+  .player .dur{font-family:var(--display);font-weight:600;font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .rec .player .dur{color:#C9D6D2}
+
+  /* ===== admin ===== */
+  .adminbar{background:var(--teal-dark);color:#fff}
+  .adminbar .wrap{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:44px;font-size:.88rem;flex-wrap:wrap;padding-block:6px}
+  .adminbar b{font-family:var(--display)}
+  .adminbar button{background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:999px;padding:5px 12px;cursor:pointer;font-family:var(--display);font-weight:600;font-size:.85rem}
+  .inboxsec{display:flex;flex-direction:column;gap:12px}
+  .inboxsec > header{display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .inboxsec h2{font-size:1.3rem;display:flex;align-items:center;gap:10px}
+  .inboxsec h2 .n{background:var(--coral);color:var(--ink);border-radius:999px;font-size:.85rem;padding:2px 10px}
+  .inboxsec h2 .n.zero{background:var(--sand);color:var(--faint)}
+  .item{background:var(--surface);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:0 10px 26px -24px rgba(22,35,31,.5)}
+  .item .ctx{font-size:.8rem;color:var(--faint);font-family:var(--display);font-weight:600}
+  .empty{background:var(--surface);border:2px dashed var(--line);border-radius:16px;padding:18px;text-align:center;color:var(--faint);font-size:.95rem}
+  .form5{display:flex;flex-direction:column;gap:0}
+  .fstep{display:grid;grid-template-columns:36px 1fr;gap:14px;padding:18px 0;border-bottom:1px solid var(--line)}
+  .fstep:last-child{border-bottom:0}
+  .fstep .n{width:34px;height:34px;border-radius:50%;background:var(--coral-soft);color:var(--coral-ink);display:grid;place-items:center;font-family:var(--display);font-weight:800}
+  .fstep.done .n{background:var(--ok-soft);color:var(--ok)}
+  .fstep > div{min-width:0}
+  .promptrow{display:flex;gap:8px;align-items:flex-start}
+  .promptrow .input{flex:1;min-height:0}
+  .xbtn{flex:none;width:44px;height:48px;border-radius:12px;border:2px solid var(--line);background:#fff;cursor:pointer;color:var(--faint);font-size:1.2rem}
+  .xbtn:hover{color:var(--danger);border-color:var(--danger)}
+  details.more{border-radius:14px;background:var(--bg);padding:12px 14px}
+  details.more summary{cursor:pointer;font-family:var(--display);font-weight:700;color:var(--teal-dark)}
+  .switch{display:flex;gap:12px;align-items:center;cursor:pointer}
+  .switch input{position:absolute;opacity:0;width:1px;height:1px}
+  .switch .sw{width:54px;height:30px;border-radius:999px;background:#CFC5B4;position:relative;flex:none;transition:background .15s}
+  .switch .sw::after{content:"";position:absolute;left:3px;top:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:left .15s;box-shadow:0 2px 4px rgba(0,0,0,.2)}
+  .switch input:checked + .sw{background:var(--teal)}
+  .switch input:checked + .sw::after{left:27px}
+  .switch input:focus-visible + .sw{outline:3px solid var(--coral);outline-offset:2px}
+  .switch b{font-family:var(--display)}
+  .twocol{display:grid;gap:22px}
+  @media(min-width:900px){.twocol{grid-template-columns:1fr 1fr;align-items:start}}
+  .previewframe{background:var(--bg);border-radius:var(--radius);padding:14px;border:2px solid var(--line)}
+  .previewframe .mini{background:var(--ink);border-radius:16px;padding:14px;color:#fff;font-family:var(--display);font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:10px}
+  .previewframe .mini span{flex:1;background:#fff;color:var(--faint);border-radius:999px;padding:8px 12px;font-weight:400;font-family:var(--body);font-size:.85rem}
+.previewframe .promo.has-img{grid-template-columns:1fr}
+  .previewframe .promo .pimg{height:160px;min-height:0}
+  .tablewrap{overflow-x:auto;border-radius:var(--radius);background:var(--surface);box-shadow:0 14px 34px -26px rgba(22,35,31,.45)}
+  table.mt{width:100%;border-collapse:collapse;font-size:.92rem;min-width:640px}
+  table.mt th,table.mt td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+  table.mt th{font-family:var(--display);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:700}
+  table.mt tr:last-child td{border-bottom:0}
+  .mcards{display:none}
+  @media(max-width:700px){.tablewrap.members{display:none}.mcards{display:flex;flex-direction:column;gap:10px}}
+
+  /* toast + modal */
+  .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:14px;font-size:.92rem;max-width:min(92vw,520px);z-index:100;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;box-shadow:0 18px 40px -16px rgba(0,0,0,.5)}
+  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+  body.has-bottom .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  .scrim{position:fixed;inset:0;background:rgba(22,35,31,.55);z-index:90;display:grid;place-items:center;padding:16px}
+  .modal{background:var(--surface);border-radius:var(--radius);padding:22px;max-width:440px;width:100%;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 60px -20px rgba(0,0,0,.5)}
+  .menu{position:absolute;right:16px;top:calc(100% + 6px);background:var(--surface);border-radius:14px;box-shadow:0 18px 40px -18px rgba(22,35,31,.5);padding:6px;min-width:200px;z-index:60;display:flex;flex-direction:column}
+  .menu button{background:none;border:0;text-align:left;padding:10px 12px;border-radius:10px;cursor:pointer;font-family:var(--display);font-weight:600;color:var(--ink)}
+  .menu button:hover{background:var(--sand)}
+  footer.site{background:var(--ink);color:#C9C4B8;padding-block:32px;font-size:.85rem}
+  footer.site .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+  footer.site .brand{color:#fff}
+  footer.site .brand .e{background:#fff;color:var(--ink)}
+  body.has-bottom footer.site{padding-bottom:110px}
+</style>
+
+</head>
+<body>
+<div class="demobar"><span><strong>DEMO: Community page</strong> · a draft for discussion, not live. Sample data.</span>
+  <div class="demotools"><span>View as</span><div class="roles"><button data-role="visitor" aria-pressed="true">Visitor</button><button data-role="member" aria-pressed="false">Member</button><button data-role="admin" aria-pressed="false">Anming (admin)</button></div>
+  <button class="toggle" id="notesbtn">Hide notes</button><button class="toggle dim" id="resetbtn">Reset</button></div></div>
+<div id="app"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+const HEADSHOT = "images/anming-headshot.jpg";
+/* ---------- sample data (all examples) ---------- */
+const TODAY = '2026-10-07';
+const DOC = id => 'https://docs.google.com/document/d/EXAMPLE-' + id + '/edit';
+const YT = id => 'https://www.youtube.com/watch?v=EXAMPLE' + id;
+const L = (id, date, title, yt, kw, prompts, intro) => ({
+  id, date, title, ytTitle: yt, keywords: kw, doc: DOC(id), yt: YT(id),
+  assignment: { intro: intro || (prompts.length > 1 ? 'Choose one of the questions below and answer by text or audio.' : 'Answer the question below by text or audio.'), prompts }
+});
+function seedLessons() {
+  return [
+    L(1, '2019-03-12', 'Parts of Speech', 'Parts of Speech in English: Nouns, Verbs, Adjectives & More', 'noun, verb, adjective, adverb, pronoun, preposition, conjunction, grammar basics', ['Write three sentences about your morning. Then label one noun, one verb and one adjective in each.']),
+    L(2, '2019-06-04', 'Make vs. Do', 'MAKE or DO? Stop making this common mistake', 'make, do, collocations, make a decision, do homework', ['Describe your weekend using at least three expressions with MAKE and three with DO.']),
+    L(3, '2019-11-19', 'Phrasal Verbs with GET', '20 Phrasal Verbs with GET you need to know', 'get up, get over, get along, get by, get away with', ['Tell us about a difficult time you got through. Use at least two phrasal verbs with GET.']),
+    L(4, '2020-02-11', 'Present Perfect vs. Simple Past', 'I have done or I did? Present Perfect vs Past Simple', 'have done, did, past tense, present perfect, simple past, past simple', ['What is something you have never done but want to do? When did you first think about it?']),
+    L(5, '2020-05-26', 'Linking Sounds in Fast Speech', 'Why native speakers sound so fast: linking sounds', 'pronunciation, connected speech, linking, accent, listening', ['Record yourself saying: "What are you up to after work?" three times, faster each time.']),
+    L(6, '2020-09-15', 'Small Talk Starters', 'How to start small talk (without sounding weird)', 'conversation, small talk, starters, questions, ice breakers', ['You are waiting for a coffee next to a stranger. What do you say first? Write the first 3 lines of the conversation.']),
+    L(7, '2021-01-19', 'Since vs. For', 'SINCE or FOR? Easy explanation', 'since, for, duration, time, present perfect', ['How long have you studied English? Answer with SINCE and with FOR.']),
+    L(8, '2021-04-06', 'Used To vs. Would', 'Talking about the past: USED TO and WOULD', 'used to, would, past habits, childhood', ['Describe a typical summer when you were a child. Use USED TO and WOULD.']),
+    L(9, '2021-08-17', 'Gonna, Wanna, Gotta', 'Gonna, wanna, gotta: how Americans really talk', 'reductions, informal, spoken, american, pronunciation, going to, want to, got to', ['Say three things you are gonna do this week, using natural reductions.']),
+    L(10, '2021-11-30', 'Articles: A, An, The', 'When to use A, AN and THE (and when to use nothing)', 'articles, a, an, the, zero article', ['Describe the room you are in right now. Pay attention to every A, AN and THE.']),
+    L(11, '2022-03-08', 'Say, Tell, Speak, Talk', 'SAY, TELL, SPEAK or TALK? The difference', 'say, tell, speak, talk, confusing verbs', ['Tell us about the last good conversation you had. Who did you talk to and what did they say?']),
+    L(12, '2022-06-21', 'The American T', 'The 4 sounds of T in American English', 'flap t, pronunciation, water, butter, american accent, true t, stop t', ['Record: "Put a little water in the bottle, but not a lot."']),
+    L(13, '2022-10-04', 'Present Perfect Continuous', "I've been working vs I've worked", 'have been working, continuous, progressive, duration', ["What have you been doing lately to improve your English? What have you finished?"]),
+    L(14, '2023-01-24', 'Phrasal Verbs for Work', "10 phrasal verbs you'll hear at work", 'business, office, follow up, set up, carry out, phrasal verbs, meetings', ['Describe a normal workday using at least four phrasal verbs from the lesson.']),
+    L(15, '2023-05-09', 'Conditionals in Real Life', 'If I were you... Conditionals the way people actually use them', 'if, conditional, first, second, third, would, if I were you', ['If you could live in any city for one year, where would you go and why?']),
+    L(16, '2023-09-12', "Stop Saying 'Very'", 'Stop saying VERY: 20 stronger words', 'vocabulary, adjectives, intensifiers, very good, very big, exhausted, starving', ['Describe your favorite food without using the word "very".']),
+    L(17, '2024-01-16', 'Agreeing and Disagreeing Politely', 'How to disagree without sounding rude', 'opinion, polite, disagree, agree, conversation, diplomacy', ['"Working from home is better than working in an office." Agree or disagree politely.']),
+    L(18, '2024-04-30', 'Prepositions of Time: In, On, At', 'IN, ON or AT? Prepositions of time', 'prepositions, time, in, on, at, dates, weekend', ['Tell us about an important date in your life. Use IN, ON and AT correctly.']),
+    L(19, '2024-08-20', 'Word Stress', "Why people don't understand you: WORD STRESS", 'pronunciation, stress, syllables, accent, comfortable, vegetable', ['Record these words: comfortable, vegetable, photographer, photography, interesting.']),
+    L(20, '2024-12-03', 'Holiday Small Talk', 'Small talk for the holidays', 'christmas, thanksgiving, new year, party, conversation, family', ['How do you usually spend the end-of-year holidays?']),
+    L(21, '2025-03-11', 'Modal Verbs of Deduction', "It must be, it can't be, it might be", 'must, might, could, cant, modals, guessing, deduction', ['Look out your window. Make three guesses about the people you see using MUST, MIGHT and CAN\'T.']),
+    L(22, '2025-06-24', 'Fillers and Hesitation', 'Um, like, you know: natural fillers in English', 'fillers, hesitation, fluency, um, like, you know, i mean', ['Talk for one minute about your favorite movie. Use at least two natural fillers.']),
+    L(23, '2025-10-14', 'Reported Speech', 'He said that... Reported speech made simple', 'indirect speech, said, told, reporting verbs', ['Report a conversation you had this week. What did the other person say?']),
+    L(24, '2026-01-20', 'Telling Stories in English', 'How to tell a good story in English', 'storytelling, narrative, past tenses, anecdotes', ['Tell a short story about a time something went wrong while traveling.']),
+    L(25, '2026-04-07', 'Idioms About Time', '15 English idioms about TIME', 'idioms, expressions, time flies, in the nick of time, kill time', ['Use three time idioms to describe your week so far.']),
+    L(26, '2026-07-14', 'Phrasal Verbs with TAKE', 'TAKE OFF, TAKE ON, TAKE AFTER... Phrasal verbs with TAKE', 'take off, take on, take after, take up, phrasal verbs', ['Who in your family do you take after? Is there a hobby you want to take up?']),
+    L(27, '2026-09-29', 'Gerunds vs. Infinitives', 'I stopped smoking or I stopped to smoke?', 'ing, to infinitive, gerund, verb patterns, stop, remember, try', ['Write about something you stopped doing, and something you stopped to do.']),
+    L(28, '2026-10-06', 'Keep the Conversation Going: Follow-Up Questions', "Small talk that doesn't die: 5 follow-up questions", 'conversation, questions, small talk, follow up, keep talking, awkward silence',
+      ["What's something you did last weekend? Add one detail that would make someone curious.",
+       'Describe a hobby you have had for a long time. How did you get into it?',
+       'Tell us about a place in your city you would recommend to a visitor.'],
+      'Choose one of the three questions. Answer in 4 to 6 sentences, then finish with a follow-up question someone could ask you.')
+  ];
+}
+function seedMembers() {
+  return [
+    { id: 'anming', name: 'Anming', display: 'Anming', email: 'anming@englishevolution.example', admin: true, joined: '2026-01-01', status: 'active' },
+    { id: 'me', name: 'Carlos Mendes', display: 'Carlos', email: 'carlos.mendes@example.com', joined: '2026-10-07', status: 'active', color: '#CFE3E6' },
+    { id: 'm1', name: 'Mariana Souza', display: 'Mariana', email: 'mariana.s@example.com', joined: '2026-03-02', status: 'active', color: '#FBE7DE' },
+    { id: 'm2', name: 'Kenji Watanabe', display: 'Kenji W.', email: 'kenji.w@example.com', joined: '2026-05-18', status: 'active', color: '#E4E9D3' },
+    { id: 'm3', name: 'Priya Nair', display: 'Priya', email: 'priya.nair@example.com', joined: '2026-06-10', status: 'active', color: '#F4E3B8' },
+    { id: 'm4', name: 'Ahmed Hassan', display: 'Ahmed', email: 'ahmed.h@example.com', joined: '2026-07-21', status: 'active', color: '#DCD7EC' },
+    { id: 'm5', name: 'Lucía Ortega', display: 'Lucía', email: 'lucia.ortega@example.com', joined: '2026-08-30', status: 'active', color: '#F3D6D6' },
+    { id: 'm6', name: 'Tomáš Novák', display: 'Tom', email: 'tom.novak@example.com', joined: '2026-02-14', status: 'active', color: '#D6E8DD' },
+    { id: 'm7', name: 'Elif Kaya', display: 'Elif', email: 'elif.kaya@example.com', joined: '2026-04-03', status: 'active', color: '#FBE7DE' },
+    { id: 'm8', name: 'Dmitri Volkov', display: 'Dmitri', email: 'd.volkov@example.com', joined: '2026-09-12', status: 'active', color: '#E2E6EA' },
+    { id: 'm9', name: 'Dave Lin', display: 'Dave L.', email: 'davelin99@example.com', joined: '2026-10-05', status: 'active', color: '#EDE3D2' }
+  ];
+}
+function seedResponses() {
+  return [
+    { id: 'r1', lessonId: 28, memberId: 'm1', prompt: 2, type: 'text', date: '2026-10-06T19:12', seen: true,
+      text: "I would recommend the Mercado Central in my city. It's an old market with more than 200 small shops. Most visitors go there for the food, but my favorite part is the coffee stand on the second floor, because the owner has been roasting beans there for forty years. You can sit at the counter and he tells you where every coffee comes from.\n\nFollow-up question: What do you usually look for when you visit a new city?",
+      feedback: { text: "Lovely detail about the coffee owner. That's exactly the kind of detail that makes people ask a follow-up question. One small fix: \"more than 200 small shops\" is perfect, and you could also say \"over 200\". Nice work, Mariana.", date: '2026-10-07T09:40' } },
+    { id: 'r2', lessonId: 28, memberId: 'm2', prompt: 0, type: 'audio', date: '2026-10-06T22:03', dur: 41, seen: true,
+      transcript: "Last weekend I went hiking with my brother. We planned a short walk, but we got a little lost and walked for six hours. The funny part is that we found a small restaurant in the middle of the forest. My follow-up question is: what is the strangest place you have eaten?" },
+    { id: 'r3', lessonId: 28, memberId: 'm3', prompt: 1, type: 'text', date: '2026-10-07T07:25', seen: false,
+      text: "I've been painting with watercolors for about eight years. I got into it because my grandmother painted, and when she moved in with us she taught me on Sunday afternoons. Now I paint mostly birds. It relaxes me after work.\n\nFollow-up: Is there a hobby someone in your family taught you?" },
+    { id: 'r4', lessonId: 28, memberId: 'm4', prompt: 0, type: 'audio', date: '2026-10-07T08:10', dur: 55, seen: false,
+      transcript: "Last weekend I finally fixed my old bicycle. It was in my garage for three years. I watched a lot of videos and I bought one small part online. On Sunday I rode it to the beach. A follow-up question could be: do you prefer to fix things yourself or pay someone?",
+      feedback: null },
+    { id: 'r5', lessonId: 28, memberId: 'm5', prompt: 2, type: 'text', date: '2026-10-07T10:02', seen: false,
+      text: "If you visit Valencia, you have to go to the old riverbed. They turned the river into a huge park, about nine kilometers long. You can rent a bike and ride from the city center all the way to the science museum.\n\nFollow-up: Do you prefer parks or museums when you travel?" },
+    { id: 'r6', lessonId: 27, memberId: 'm6', prompt: 0, type: 'text', date: '2026-09-30T18:00', seen: true,
+      text: "I stopped drinking coffee after 3 pm because I couldn't sleep. Yesterday I stopped to buy flowers for my wife on the way home.",
+      feedback: { text: 'Both sentences are correct, Tom. A perfect pair to show the difference.', date: '2026-10-01T08:00' } }
+  ];
+}
+function seedIntros() {
+  return [
+    { id: 'i1', memberId: 'm8', date: '2026-10-05T16:20', text: "Hi everyone, I'm Dmitri from Tbilisi. I work as a software tester. My biggest challenge is phone calls. I understand emails perfectly, but when a client calls me I panic and forget simple words.",
+      replies: [
+        { id: 'i1r1', memberId: 'm6', date: '2026-10-05T18:02', text: "Same for me, Dmitri! What helped me was writing down 3 or 4 phrases before every call. It sounds silly but it works." },
+        { id: 'i1r2', memberId: 'm9', date: '2026-10-06T02:14', text: 'Hi everyone, follow my Instagram @fast.english.tips for free English tips and daily lessons!!' }
+      ] },
+    { id: 'i2', memberId: 'm5', date: '2026-10-03T11:45', text: "Hola! I'm Lucía from Valencia, Spain. I'm a nurse and I want to work in Ireland next year. My biggest challenge is understanding fast speakers, especially when people use phrasal verbs.",
+      replies: [ { id: 'i2r1', memberId: 'm1', date: '2026-10-03T13:10', text: 'Welcome Lucía! The lesson on phrasal verbs with GET helped me a lot. Good luck with Ireland!' } ] },
+    { id: 'i3', memberId: 'm3', date: '2026-09-28T09:30', text: "Hello! Priya here, from Kochi in India. I'm a dentist. I can speak English well in my job, but in casual conversation I sound very formal and a bit stiff. I want to sound more natural.",
+      replies: [] }
+  ];
+}
+function seedQA() {
+  return [
+    { id: 'q1', memberId: 'm7', date: '2026-10-07T06:50', q: 'Can I use "gonna" in an email to my boss?', detail: 'I watched the lesson about gonna/wanna. Is it OK to write it, or only to say it?', answer: null },
+    { id: 'q2', memberId: 'm2', date: '2026-10-06T21:15', q: 'How do I pronounce "comfortable"? Three syllables or four?', detail: '', answer: null },
+    { id: 'q3', memberId: 'm1', date: '2026-10-02T10:00', q: 'What\'s the difference between "I\'ve been working" and "I worked"?', detail: 'For example: "I\'ve been working here for two years" and "I worked here for two years".',
+      answer: { date: '2026-10-03T08:30', text: '"I\'ve been working here for two years" means you started two years ago and you still work here now.\n\n"I worked here for two years" means that time is finished. You don\'t work here anymore.\n\nThe full lesson on the present perfect continuous goes deeper, with practice exercises.' } },
+    { id: 'q4', memberId: 'm6', date: '2026-09-25T15:40', q: 'Is it "on the weekend" or "at the weekend"?', detail: '',
+      answer: { date: '2026-09-26T09:10', text: 'Both are correct. "On the weekend" is American English, and "at the weekend" is British English. Since we focus on American English here, I\'d say "on the weekend".' } },
+    { id: 'q5', memberId: 'm4', date: '2026-09-18T12:00', q: 'Do people say "make a decision" or "take a decision"?', detail: '',
+      answer: { date: '2026-09-19T07:45', text: 'In American English, "make a decision" is the natural choice. You\'ll hear "take a decision" in British English sometimes, but "make" works everywhere.' } }
+  ];
+}
+function seedReports() {
+  return [ { id: 'rep1', kind: 'reply', targetId: 'i1r2', parentId: 'i1', reason: 'Spam or advertising', reporterId: 'm6', date: '2026-10-06T08:00' } ];
+}
+function seedPromo() {
+  return { on: true, tag: 'Now enrolling', headline: 'Group Classes: 3 spots open for November', text: 'Practice speaking live with me in a small group of up to 8 students. I correct your mistakes in the moment, so you stop repeating them.', image: 'HEADSHOT', btnText: 'See Group Classes', btnLink: 'group-classes-demo.html' };
+}
+function seedState() {
+  return { v: 4, role: 'member', lessons: seedLessons(), lotw: 28, members: seedMembers(), responses: seedResponses(), intros: seedIntros(), qa: seedQA(), reports: seedReports(), promo: seedPromo(), prefs: { roundup: true, personal: true }, pendingQuery: '', firstVisit: false, signup: { name: 'Carlos Mendes', email: 'carlos.mendes@example.com' } };
+}
+
+/* ---------- state ---------- */
+const KEY = 'ee-community-demo-v4';
+let S;
+try { S = JSON.parse(localStorage.getItem(KEY)); } catch (e) { S = null; }
+if (!S || S.v !== 4) S = seedState();
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
+const UI = { route: '', search: '', libSearch: '', qaSearch: '', libShow: 15, editing: null, replying: null, reporting: null, confirming: null, menu: false,
+  assign: { mode: 'text', prompt: 0, text: '' }, feedbackFor: null, answerFor: null, lessonForm: null, formErr: {}, published: null, memberSearch: '', notes: true, adminLessonSearch: '' };
+const blobs = {}; // audio blob URLs for this page load only
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+function fdate(iso, withYear) {
+  const d = new Date(iso.length <= 10 ? iso + 'T12:00' : iso);
+  const y = d.getFullYear(), now = new Date(TODAY + 'T12:00');
+  return MONTHS[d.getMonth()] + ' ' + d.getDate() + ((withYear || y !== now.getFullYear()) ? ', ' + y : '');
+}
+const nowIso = () => { const d = new Date(); const p = n => String(n).padStart(2, '0'); return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + 'T' + p(d.getHours()) + ':' + p(d.getMinutes()); };
+const uid = p => p + Math.random().toString(36).slice(2, 8);
+const member = id => S.members.find(m => m.id === id) || { id, display: 'Former member', name: 'Former member', removed: true };
+const lesson = id => S.lessons.find(l => l.id === +id);
+const lessonsSorted = () => S.lessons.slice().sort((a, b) => b.date.localeCompare(a.date));
+const isAdmin = () => S.role === 'admin';
+const meId = () => isAdmin() ? 'anming' : 'me';
+const mmss = s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+
+function avatar(m, size) {
+  size = size || 40;
+  const st = `width:${size}px;height:${size}px;font-size:${Math.round(size * .42)}px`;
+  if (m.id === 'anming') return `<span class="av anming" style="${st}"><img src="${HEADSHOT}" alt=""></span>`;
+  if (m.photo) return `<span class="av" style="${st}"><img src="${m.photo}" alt=""></span>`;
+  const ch = (m.display || m.name || '?').trim().charAt(0).toUpperCase();
+  return `<span class="av" style="${st};background:${m.color || 'var(--sand)'}">${esc(ch)}</span>`;
+}
+function who(m, date, extra) {
+  return `<div class="who">${avatar(m, 40)}<div style="min-width:0"><b>${esc(m.display)}${m.id === 'anming' ? '<span class="badge">Teacher</span>' : ''}${m.status === 'suspended' && isAdmin() ? ' <span class="chip red">Suspended</span>' : ''}</b><small>${date ? fdate(date) : ''}${extra || ''}</small></div></div>`;
+}
+const I = {
+  search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>',
+  home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>',
+  book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M8 7h7"/></svg>',
+  star: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m12 3 2.7 5.6 6.1.8-4.4 4.3 1 6.1L12 17l-5.4 2.8 1-6.1-4.4-4.3 6.1-.8z"/></svg>',
+  pen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13 7 4 4"/></svg>',
+  wave: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V12M11 11.5V4a1.5 1.5 0 0 1 3 0v8M14 12V6a1.5 1.5 0 0 1 3 0v8a7 7 0 0 1-12.2 4.7L3.4 15a1.6 1.6 0 0 1 2.4-2.1L8 15"/></svg>',
+  q: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M9.8 9.5a2.3 2.3 0 0 1 4.4.8c0 1.5-2.2 1.9-2.2 3.2M12 16.3v.1"/></svg>',
+  mic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
+  text: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>',
+  info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.1"/></svg>',
+  lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+  play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg>',
+  pause: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4.5" width="4" height="15" rx="1"/><rect x="14" y="4.5" width="4" height="15" rx="1"/></svg>',
+  doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 3h8l5 5v13H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/></svg>',
+  yt: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3z"/></svg>',
+  inbox: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 13h5l1.5 3h5L16 13h5"/><path d="M5 5h14l2 8v6H3v-6z"/></svg>',
+  plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  mega: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 10v4h4l7 5V5L7 10z"/><path d="M17.5 9a4 4 0 0 1 0 6"/></svg>',
+  users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14a6.5 6.5 0 0 1 3.5 6"/></svg>',
+  noreply: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="m4 4 16 16"/></svg>',
+  mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>'
+};
+const note = (title, html) => `<div class="note"><b class="t">${esc(title)}</b><p>${html}</p></div>`;
+const rule = html => `<div class="rule">${I.info}<p>${html}</p></div>`;
+
+/* ---------- forgiving lesson search ---------- */
+const STOP = new Set('a an the of to in on at for and or how what is are be with your you i my me it this that do does english lesson lessons video vs versus about from by'.split(' '));
+function norm(s) { return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/['’]/g, '').replace(/[^a-z0-9]+/g, ' ').trim(); }
+function stem(w) {
+  if (w.length > 4 && w.endsWith('ies')) return w.slice(0, -3) + 'y';
+  if (w.length > 4 && /(ches|shes|xes|sses)$/.test(w)) return w.slice(0, -2);
+  if (w.length > 3 && w.endsWith('s') && !w.endsWith('ss') && !w.endsWith('us')) return w.slice(0, -1);
+  return w;
+}
+const toks = s => norm(s).split(' ').filter(Boolean).map(stem);
+function lev(a, b, max) {
+  if (Math.abs(a.length - b.length) > max) return max + 1;
+  let prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i]; let best = i;
+    for (let j = 1; j <= b.length; j++) {
+      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      if (cur[j] < best) best = cur[j];
+    }
+    if (best > max) return max + 1;
+    prev = cur;
+  }
+  return prev[b.length];
+}
+function tokScore(q, t) {
+  if (q === t) return 1;
+  if (q.length >= 3 && t.startsWith(q)) return .85;
+  if (t.length >= 4 && q.startsWith(t)) return .7;
+  if (q.length >= 5 && t.length >= 4) { const m = q.length >= 8 ? 2 : 1; if (lev(q, t, m) <= m) return .65; }
+  if (q.length >= 4 && t.includes(q)) return .5;
+  return 0;
+}
+function index(l) {
+  if (l._ix && l._ix.k === l.title + l.ytTitle + l.keywords) return l._ix;
+  const ix = { k: l.title + l.ytTitle + l.keywords, f: [[toks(l.title), 3], [toks(l.ytTitle || ''), 2.5], [toks(l.keywords || ''), 2]], n: norm(l.title + ' ' + (l.ytTitle || '')) };
+  Object.defineProperty(l, '_ix', { value: ix, enumerable: false, configurable: true, writable: true });
+  return ix;
+}
+function searchLessons(query, list) {
+  list = list || S.lessons;
+  let qt = toks(query).filter(t => !STOP.has(t));
+  if (!qt.length) qt = toks(query);
+  if (!qt.length) return [];
+  const nq = norm(query);
+  const out = [];
+  for (const l of list) {
+    const ix = index(l);
+    let score = 0, hit = 0;
+    for (const q of qt) {
+      let best = 0;
+      for (const [ts, w] of ix.f) for (const t of ts) { const s = tokScore(q, t) * w; if (s > best) best = s; }
+      if (best > 0) hit++;
+      score += best;
+    }
+    const cov = hit / qt.length;
+    if (!hit || cov < (qt.length > 2 ? .5 : .5)) continue;
+    if (nq.length > 3 && ix.n.includes(nq)) score += 4;
+    out.push({ l, score: score * (0.4 + cov), cov });
+  }
+  out.sort((a, b) => b.cov - a.cov || b.score - a.score || b.l.date.localeCompare(a.l.date));
+  // Lessons matching every search word come first; partial matches only fill in when there are few full matches.
+  const full = out.filter(o => o.cov === 1);
+  if (full.length >= 3) return full.map(o => o.l);
+  return full.concat(out.filter(o => o.cov < 1).slice(0, 6 - full.length)).map(o => o.l);
+}
+function hl(text, query) {
+  const qt = toks(query).filter(t => !STOP.has(t) && t.length > 1);
+  if (!qt.length) return esc(text);
+  return text.split(/(\s+)/).map(w => {
+    const t = stem(norm(w).replace(/ /g, ''));
+    return t && qt.some(q => tokScore(q, t) >= .65) ? '<mark>' + esc(w) + '</mark>' : esc(w);
+  }).join('');
+}
+
+/* ---------- toast / external links ---------- */
+const safeLink = u => /^(https?:\/\/|[a-z0-9-]+\.html)/i.test(u || '') ? u : '#';
+let toastT;
+function toast(msg) {
+  const t = $('#toast'); t.innerHTML = msg; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 3600);
+}
+function openExternal(kind, label) {
+  const msgs = {
+    doc: 'Mockup: this opens <b>' + esc(label) + '</b> in Google Docs in a new tab.',
+    yt: 'Mockup: this opens the original video on YouTube in a new tab.',
+    page: 'Mockup: this opens the <b>' + esc(label) + '</b> page of the main website.'
+  };
+  toast(msgs[kind]);
+}
+
+/* ---------- routing ---------- */
+const GATE_OFF = true;
+const PUBLIC = ['welcome', 'join', 'login', 'verify', 'loginsent', 'setup'];
+function go(route, keepScroll) {
+  closeMenus();
+  UI.route = route;
+  try { if (location.hash.slice(1) !== route) history.pushState(null, '', '#' + route); } catch (e) {}
+  render();
+  if (!keepScroll) window.scrollTo(0, 0);
+}
+function resolve(route) {
+  if (!route) route = S.role === 'visitor' ? 'welcome' : (S.role === 'admin' ? 'admin-inbox' : 'home');
+  const base = route.split('-')[0];
+  // Login gate switched off for review: anyone opening the community lands inside as a member.
+  if (S.role === 'visitor' && !PUBLIC.includes(route)) { if (GATE_OFF) S.role = 'member'; else { UI.gated = true; return 'login'; } }
+  if (S.role !== 'visitor' && PUBLIC.includes(route) && route !== 'setup') return S.role === 'admin' ? 'admin-inbox' : 'home';
+  if (base === 'admin' && !isAdmin()) return 'home';
+  return route;
+}
+function closeMenus() { UI.menu = UI.navOpen = UI.ddOpen = false; }
+
+/* ---------- shell ---------- */
+function render() {
+  UI.route = resolve(UI.route);
+  const r = UI.route, base = r.split('-')[0];
+  document.querySelectorAll('.roles button').forEach(b => b.setAttribute('aria-pressed', b.dataset.role === S.role));
+  const inMember = S.role !== 'visitor' && base !== 'admin' && r !== 'setup';
+  document.body.classList.toggle('has-bottom', inMember);
+  let html = '';
+  if (isAdmin()) html += adminBar(base === 'admin');
+  html += topnav();
+  if (inMember) html += memberTabs(r);
+  if (base === 'admin') html += adminTabs(r);
+  html += '<main>' + view(r) + '</main>';
+  html += footer();
+  $('#app').innerHTML = html;
+  stopPlayback();
+  afterRender(r);
+}
+function view(r) {
+  const [base, arg] = [r.split('-')[0], r.split('-').slice(1).join('-')];
+  switch (base) {
+    case 'welcome': return vWelcome();
+    case 'join': return vJoin();
+    case 'login': return vLogin();
+    case 'verify': return vVerify();
+    case 'loginsent': return vLoginSent();
+    case 'setup': return vSetup();
+    case 'home': return vHome();
+    case 'library': return vLibrary();
+    case 'lesson': return vLesson(arg);
+    case 'week': return vLesson(S.lotw, true);
+    case 'assign': return vAssign(arg || S.lotw);
+    case 'intros': return vIntros();
+    case 'qa': return vQA();
+    case 'profile': return vProfile();
+    case 'programs': return vPrograms();
+    case 'admin': return vAdmin(arg);
+    default: return vHome();
+  }
+}
+function topnav() {
+  const me = member(meId());
+  const right = S.role === 'visitor'
+    ? `<button class="btn navcta" data-go="login">Log in</button>`
+    : `<div style="position:relative"><button class="mebtn" data-act="menu" aria-expanded="${UI.menu}">${avatar(me, 32)}<span class="hide-sm">${esc(me.display)}</span></button>
+       ${UI.menu ? `<div class="menu" role="menu">${isAdmin() ? '<button data-go="admin-inbox">Admin inbox</button><button data-go="home">View community</button>' : '<button data-go="profile">Profile and email settings</button>'}<button data-act="logout">Log out</button></div>` : ''}</div>`;
+  // Same main navigation as the rest of the English Evolution website, with Community added.
+  return `<nav class="topnav ${UI.navOpen ? 'open' : ''}" id="sitenav"><div class="wrap">
+    <a class="brand" href="home-demo.html"><span class="e">e</span><span>english<br>evolution</span></a>
+    <div class="navlinks"><a href="home-demo.html">Home</a><a href="#" data-act="nolink">About</a><div class="dd ${UI.ddOpen ? 'open' : ''}"><button type="button" data-act="dd" aria-expanded="${!!UI.ddOpen}" aria-haspopup="true">Options</button><div class="ddmenu"><a href="self-study-demo.html">Self-Study<small>Learn at your own pace · $19/mo</small></a><a href="group-classes-demo.html">Group Classes<small>Live speaking practice · $229/mo</small></a></div></div><a href="#" class="cur" aria-current="page" data-go="${S.role === 'visitor' ? 'welcome' : 'home'}">Community</a><a href="#" data-act="nolink">Students</a><a href="#" data-act="nolink">Blog</a><a href="#" data-act="nolink">FAQ</a></div>
+    <div class="navright"><button type="button" class="menubtn" data-act="navtoggle" aria-expanded="${!!UI.navOpen}" aria-label="Open menu"><span></span>Menu</button>${right}</div></div></nav>`;
+}
+function memberTabs(r) {
+  const base = r.split('-')[0];
+  const cur = { home: 'home', library: 'library', lesson: 'library', week: 'week', assign: 'assign', intros: 'intros', qa: 'qa' }[base];
+  const t = (id, icon, full, short) => `<button class="tab" data-go="${id}" ${cur === id ? 'aria-current="page"' : ''}>${icon}<span class="full">${full}</span><span class="short">${short}</span></button>`;
+  return `<div class="tabs member"><div class="wrap">
+    ${t('home', I.search, 'Find a lesson', 'Search')}
+    ${t('week', I.star, 'Lesson of the Week', 'This week')}
+    ${t('assign', I.pen, 'Weekly Assignment', 'Practice')}
+    ${t('intros', I.wave, 'Introductions', 'Intros')}
+    ${t('qa', I.q, 'Ask a Question', 'Q&amp;A')}
+    ${t('library', I.book, 'All lessons', 'Lessons')}
+  </div></div>`;
+}
+function footer() {
+  return `<footer class="site"><div class="wrap"><a class="brand" href="home-demo.html"><span class="e">e</span><span>english<br>evolution</span></a>
+    <span>About · Options · Community · Refund Policy · Privacy Policy</span></div></footer>`;
+}
+
+/* ---------- public: welcome ---------- */
+function vWelcome() {
+  const q = UI.search;
+  const res = q.trim() ? searchLessons(q).slice(0, 3) : [];
+  const n = S.lessons.length;
+  return `
+  <header class="hero" style="margin-top:-28px"><div class="wrap">
+    <div class="stack" style="gap:18px">
+      <span class="freepill"><i></i>Free to join</span>
+      <h1>The free English Evolution <em>Community</em></h1>
+      <p class="lede">Full text lessons from my YouTube videos, a weekly speaking and writing assignment, and a place to ask me your English questions. All free.</p>
+      <div class="row" style="gap:16px"><button class="btn" data-go="join">Join the free community</button><button class="linkbtn" data-go="login" style="font-size:1rem">Already a member? Log in</button></div>
+      <p class="small">Just your name and email. No credit card.</p>
+    </div>
+    <div class="ytbox">
+      <span class="chip coral" style="align-self:flex-start">${I.yt.replace('<svg', '<svg width="16" height="16"')} Came from YouTube?</span>
+      <h3>Every free lesson is inside. Check that yours is here.</h3>
+      <div class="field"><label class="lab" for="pubq">Video title or topic</label>
+      <input class="input" id="pubq" data-live="pub" placeholder="e.g. parts of speech" value="${esc(q)}" autocomplete="off"></div>
+      <div class="lockres" id="pubres">${pubResults(q, res)}</div>
+      <p class="small">${n} lessons and counting. Join free to open the full text lesson.</p>
+    </div>
+  </div></header>
+  <div class="wrap">${note('Why there is a search box before signup', 'Optional idea. Visitors from YouTube can confirm their lesson exists before joining, which reduces drop-off. They see titles only. What they type is carried through signup so the lesson is waiting on their first screen. The one community link in every video description points here.')}</div>
+
+  <section class="band"><div class="wrap">
+    <div class="eyebrow">What members get</div>
+    <h2 style="margin-top:12px">A small English school, free and online.</h2>
+    <div class="feat">
+      ${featCard(I.search, 'The full lesson library', 'Search every lesson by video title or topic, then open the full text lesson in Google Docs.')}
+      ${featCard(I.star, 'Lesson of the Week', 'The newest lesson, featured every week, with the video and the full text.')}
+      ${featCard(I.pen, 'A weekly assignment', 'Practice the English from the lesson. Answer in writing, or record up to one minute of audio on your phone.')}
+      ${featCard(I.q, 'Ask me a question', 'Post a specific English question. I answer it, and every member can read the answer.')}
+      ${featCard(I.wave, 'Introductions', 'Say hello, share your biggest English challenge, and welcome other learners.')}
+      ${featCard(I.mail, 'One email a month', 'A short monthly roundup of new lessons and what you may have missed. No daily emails.')}
+    </div>
+  </div></section>
+
+  <section class="band sand"><div class="wrap">
+    <div class="eyebrow">How it works</div>
+    <h2 style="margin-top:12px">Friendly, focused, and built for learning.</h2>
+    <div class="waylist">
+      ${way(true, 'Every section has one job', 'Lessons, practice, questions and introductions each have their own place.')}
+      ${way(true, 'I answer questions and give feedback', 'I read the community and give feedback when I can. It is occasional, not on every response.')}
+      ${way(true, 'Your email stays private', 'Other members only see your display name and photo.')}
+      ${way(false, 'No general chat', 'There is no open chat room. Conversation happens in Introductions.')}
+      ${way(false, 'No private messages', 'Members cannot message each other privately.')}
+      ${way(false, 'No spam emails', 'You get one monthly roundup, plus an email when I answer your question or give you feedback.')}
+    </div>
+  </div></section>
+
+  <section class="band"><div class="wrap">
+    <div class="eyebrow">Want more?</div>
+    <h2 style="margin-top:12px">The community is free. Two paid programs go further.</h2>
+    <p style="margin-top:10px;max-width:640px">You never need these to use the community. They are here if you want a complete course library or live speaking practice with me.</p>
+    ${paidRow()}
+  </div></section>
+
+  <section class="band sand"><div class="wrap" style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px">
+    <h2>Find your lesson in under a minute.</h2>
+    <p>Join free with your name and email, then search for the lesson you came for.</p>
+    <button class="btn" data-go="join">Join the free community</button>
+  </div></section>`;
+}
+function pubResults(q, res) {
+  if (!q.trim()) return '';
+  if (!res.length) return `<p class="small">No match yet. Try one or two words from the video title. Once you join you can browse every lesson.</p>`;
+  return res.map(l => `<div class="lr"><b>${hl(l.title, q)}</b><span>${I.lock.replace('<svg', '<svg width="14" height="14" style="vertical-align:-2px"')} Join free to open</span></div>`).join('') +
+    `<button class="btn block" data-go="join">Join free and open this lesson</button>`;
+}
+const featCard = (ic, t, d) => `<div class="panel"><span class="ico">${ic}</span><h3>${t}</h3><p>${d}</p></div>`;
+const way = (y, t, d) => `<div class="way"><span class="x ${y ? 'y' : 'n'}">${y ? '✓' : '✕'}</span><div><b>${t}</b><p class="small">${d}</p></div></div>`;
+function paidRow() {
+  return `<div class="paidrow">
+    <div class="paid"><div><b>Self-Study Academy</b><p class="small">The full course library, at your own pace.</p></div><div style="text-align:right"><div class="price">$19 <small>/mo</small></div><a class="linkbtn" href="self-study-demo.html">Learn more →</a></div></div>
+    <div class="paid"><div><b>Group Classes</b><p class="small">Live speaking practice with me, max 8 students.</p></div><div style="text-align:right"><div class="price">$229 <small>/mo</small></div><a class="linkbtn" href="group-classes-demo.html">Learn more →</a></div></div>
+  </div>`;
+}
+
+/* ---------- auth ---------- */
+function vJoin() {
+  const e = UI.formErr;
+  return `<div class="wrap"><div class="authcard stack">
+    <div class="steps3"><i class="on"></i><i></i><i></i></div>
+    <div class="pagehead" style="text-align:center"><h1 style="font-size:2rem">Join the free community</h1><p>Two fields. Then check your email.</p></div>
+    ${S.pendingQuery ? `<div class="rule">${I.search.replace('<svg', '<svg')}<p>After you join, we'll take you straight to results for <strong>"${esc(S.pendingQuery)}"</strong>.</p></div>` : ''}
+    <form class="panel stack" data-form="join" novalidate>
+      <div class="field"><label class="lab" for="jname">Your name</label><input class="input" id="jname" name="name" autocomplete="name" value="${esc(S.signup.name)}">${e.name ? `<span class="err">${e.name}</span>` : ''}</div>
+      <div class="field"><label class="lab" for="jemail">Email</label><input class="input" id="jemail" name="email" type="email" inputmode="email" autocomplete="email" value="${esc(S.signup.email)}">${e.email ? `<span class="err">${e.email}</span>` : ''}</div>
+      <div class="fine">${I.mail}<span>Joining also signs you up for the <b>monthly community roundup</b>, one short email a month with new lessons and highlights. Unsubscribe anytime with one click.</span></div>
+      <div class="fine">${I.lock}<span>Your email is private. Other members only see your display name and photo.</span></div>
+      <button class="btn block" type="submit">Join free</button>
+    </form>
+    <p class="small" style="text-align:center">Already a member? <button class="linkbtn" data-go="login">Log in</button></p>
+    ${note('No password', 'Signup is name and email only, as the brief asks. Members log in with a one-tap email link, so there is no password to forget. A password option can be added if preferred.')}
+  </div></div>`;
+}
+function vVerify() {
+  return `<div class="wrap"><div class="authcard stack">
+    <div class="steps3"><i class="on"></i><i class="on"></i><i></i></div>
+    <div class="pagehead" style="text-align:center"><span class="ico teal" style="margin:0 auto">${I.mail}</span><h1 style="font-size:2rem">Check your email</h1>
+    <p>We sent a confirmation link to <b style="color:var(--ink)">${esc(S.signup.email)}</b>. Tap it to finish joining.</p></div>
+    <div class="row" style="justify-content:center"><button class="btn ghost sm" data-act="resend">Resend the email</button><button class="linkbtn" data-go="join">Use a different email</button></div>
+    <p class="small" style="text-align:center">Can't find it? Check your spam or promotions folder.</p>
+    ${note('The email they receive', 'Below is a preview of the verification email. Tap the button in it to continue the demo.')}
+    <div class="mail"><div class="mh"><b>English Evolution</b> &lt;community@englishevolution.example&gt;<br>Confirm your email to join the free community</div>
+      <div class="mb"><p style="color:var(--ink)">Hi ${esc(S.signup.name.split(' ')[0] || 'there')},</p><p style="color:var(--ink)">Tap the button below to confirm your email and open the free English Evolution community.</p>
+      <button class="btn" data-act="verify">Confirm my email</button><p class="small">See you inside,<br>Anming</p></div>
+      <div class="mf">You're receiving this because you joined the English Evolution Free Community. Unsubscribe · Privacy</div></div>
+  </div></div>`;
+}
+function vLogin() {
+  const gated = UI.gated; UI.gated = false;
+  return `<div class="wrap"><div class="authcard stack">
+    <div class="pagehead" style="text-align:center"><span class="ico teal" style="margin:0 auto">${I.lock}</span><h1 style="font-size:2rem">Log in</h1><p>${gated ? 'That page is for community members. Log in to see it.' : 'The community, lessons and assignments are for members. Enter your email and we\'ll send you a login link.'}</p></div>
+    <form class="panel stack" data-form="login" novalidate><div class="field"><label class="lab" for="lemail">Email</label><input class="input" id="lemail" type="email" inputmode="email" autocomplete="email" value="${esc(S.signup.email)}"></div>
+    <button class="btn block" type="submit">Email me a login link</button></form>
+    <div class="panel stack" style="text-align:center;align-items:center;gap:10px"><b style="font-family:var(--display)">Not a member yet?</b><p class="small">The community is free. Just your name and email.</p><button class="btn ghost sm" data-go="join">Join free</button><button class="linkbtn" data-go="welcome">What's in the community?</button></div>
+    ${note('One login for the whole site', 'The Log in button in the website header, on every page, comes here. Everything in the community is behind this login. Only the community welcome page is public, so visitors from YouTube know what they are joining.')}
+  </div></div>`;
+}
+function vLoginSent() {
+  return `<div class="wrap"><div class="authcard stack">
+    <div class="pagehead" style="text-align:center"><span class="ico teal" style="margin:0 auto">${I.mail}</span><h1 style="font-size:2rem">Check your email</h1><p>Your login link is on its way. It works for 15 minutes.</p></div>
+    <div class="mail"><div class="mh"><b>English Evolution</b><br>Your login link</div><div class="mb"><p style="color:var(--ink)">Tap below to log in to the community.</p><button class="btn" data-act="login-link">Log in</button></div></div>
+  </div></div>`;
+}
+function vSetup() {
+  const me = member('me');
+  return `<div class="wrap"><div class="authcard stack">
+    <div class="steps3"><i class="on"></i><i class="on"></i><i class="on"></i></div>
+    <div class="pagehead" style="text-align:center"><h1 style="font-size:2rem">You're in, ${esc(me.name.split(' ')[0])}!</h1><p>Two optional extras. You can change both later.</p></div>
+    <form class="panel stack" data-form="setup">
+      <div class="field"><label class="lab" for="sdisp">Display name <span class="faint" style="font-weight:400">(optional)</span></label><input class="input" id="sdisp" value="${esc(me.display)}" maxlength="30"><span class="hint">This is the only name other members see.</span></div>
+      <div class="field"><span class="lab">Profile photo <span class="faint" style="font-weight:400">(optional)</span></span>${photoEditor(me)}</div>
+      <button class="btn block" type="submit">${S.pendingQuery ? 'Save and see my lesson' : 'Save and find my lesson'}</button>
+      <button class="linkbtn quiet" type="button" data-act="skip-setup" style="align-self:center">Skip for now</button>
+    </form></div></div>`;
+}
+function photoEditor(m) {
+  return `<div class="photoedit">${avatar(m, 72)}<div class="row"><label class="btn ghost sm" for="photoin" style="cursor:pointer">${m.photo ? 'Change photo' : 'Add a photo'}</label>
+    <input type="file" id="photoin" accept="image/*" hidden>${m.photo ? '<button type="button" class="linkbtn red" data-act="photo-remove">Remove</button>' : ''}</div></div>`;
+}
+
+/* ---------- member: home ---------- */
+function vHome() {
+  const me = member(meId());
+  const l = lesson(S.lotw);
+  const q = UI.search;
+  return `<div class="wrap">
+    ${S.firstVisit && !isAdmin() ? `<div class="rule" style="margin-bottom:14px">${I.info}<p><strong>Welcome, ${esc(me.display)}!</strong> Looking for the lesson from a video? Search for it right here.</p></div>` : ''}
+    <section class="finder" aria-labelledby="findh">
+      <div class="eyebrow">Find your lesson</div>
+      <h1 id="findh">Looking for the lesson from a YouTube video?</h1>
+      <p class="sub">Search using the video title or lesson topic. Every free lesson is here, new and old.</p>
+      <form class="searchbar" data-form="search" role="search">
+        <div class="sfield">${I.search}<input id="homeq" data-live="home" type="search" enterkeyhint="search" placeholder="Video title or topic" value="${esc(q)}" autocomplete="off" aria-label="Search free lessons"></div>
+        <button class="btn" type="submit">Search free lessons</button>
+      </form>
+      <div class="tryline">Try: <button type="button" data-try="part of speech">part of speech</button><button type="button" data-try="speech">speech</button><button type="button" data-try="presnt perfect">presnt perfect</button><button type="button" data-try="I stopped to smoke">I stopped to smoke</button></div>
+      <div class="results" id="homeres" aria-live="polite">${homeResults(q)}</div>
+    </section>
+    <div style="margin-top:14px">${note('How the search works', 'Forgiving matching on the lesson title, the YouTube video title and optional extra keywords. It handles singular and plural (part/parts), partial words, missing words (parts speech), small typos (presnt), and ignores filler words. Results update as you type. With hundreds of lessons this stays fast. In the real build it runs on the database, for example Postgres full-text plus trigram matching.')}</div>
+
+    ${S.promo.on ? promoBlock(S.promo) : ''}
+    ${S.promo.on ? '' : `<div style="margin-top:14px">${note('Featured block is turned off', 'Anming switched the featured promotion off in the admin area, so the page goes straight from search to the community sections.')}</div>`}
+
+    <section style="margin-top:34px" class="stack">
+      <h2>This week in the community</h2>
+      ${lotwCard(l)}
+      <div class="sectiongrid">
+        ${scard('assign', I.pen, 'Weekly Assignment', 'Choose a prompt and respond by text or audio (up to one minute).', 'Practice now')}
+        ${scard('qa', I.q, 'Ask a Question', 'Ask Anming a specific English question.', 'Ask or read answers')}
+        ${scard('intros', I.wave, 'Introductions', 'Introduce yourself and welcome other learners.', 'Say hello')}
+        ${scard('library', I.book, 'All lessons', `Browse all ${S.lessons.length} free lessons, newest first.`, 'Browse the library')}
+      </div>
+    </section>
+    <div class="moreband"><b>Want more?</b><span>Self-Study Academy · $19/mo</span><span>Group Classes · $229/mo</span><button class="linkbtn" data-go="programs">Compare programs</button></div>
+  </div>`;
+}
+function homeResults(q) {
+  if (!q.trim()) return '';
+  const res = searchLessons(q);
+  if (!res.length) return `<div class="nores"><b>No lesson matched "${esc(q)}".</b><br>Try one or two key words from the video title, like "phrasal verbs" or "small talk". You can also <button data-go="library">browse all lessons</button> or <button data-go="qa">ask Anming</button> to point you to it.</div>`;
+  const top = res.slice(0, 6);
+  return `<div class="rhead"><span>${res.length} lesson${res.length > 1 ? 's' : ''} found${res.length > 6 ? ', showing the best 6' : ''}</span>${res.length > 6 ? '<button class="linkbtn" style="color:#F1C24B" data-act="see-all">See all results</button>' : ''}</div>` +
+    top.map(l => resCard(l, q)).join('');
+}
+function resCard(l, q) {
+  return `<div class="res"><div style="min-width:0"><h3>${hl(l.title, q)}</h3><div class="meta">Video: <i>${hl(l.ytTitle, q)}</i> · ${fdate(l.date, true)}</div></div>
+    <div class="acts"><button class="btn sm" data-act="ext-doc" data-id="${l.id}">${I.doc.replace('<svg', '<svg width="18" height="18"')} Get the full text lesson</button><button class="btn ghost sm" data-go="lesson-${l.id}">Details</button></div></div>`;
+}
+function promoBlock(p, preview) {
+  const img = p.image ? (p.image === 'HEADSHOT' ? HEADSHOT : p.image) : '';
+  return `<section class="promo ${img ? 'has-img' : ''}" aria-label="Featured">
+    ${img ? `<div class="pimg"><img src="${img}" alt="" style="${p.image === 'HEADSHOT' ? 'object-position:50% 25%' : ''}"></div>` : ''}
+    <div class="pbody">${p.tag ? `<span class="ptag">${esc(p.tag)}</span>` : ''}<h2>${esc(p.headline || 'Your headline')}</h2>${p.text ? `<p>${esc(p.text)}</p>` : ''}
+    ${p.btnText ? (preview ? `<span class="btn coral sm">${esc(p.btnText)} →</span>` : `<a class="btn coral sm" href="${esc(safeLink(p.btnLink))}"${/^https?:/.test(p.btnLink || '') ? ' target="_blank" rel="noopener"' : ''}>${esc(p.btnText)} →</a>`) : ''}</div></section>`;
+}
+function lotwCard(l) {
+  if (!l) return '';
+  const n = S.responses.filter(r => r.lessonId === l.id).length;
+  return `<div class="lotw"><div class="stack" style="gap:10px"><span class="chip teal" style="align-self:flex-start">${I.star.replace('<svg', '<svg width="14" height="14"')} Lesson of the Week</span>
+    <h2>${esc(l.title)}</h2><p>From the video "${esc(l.ytTitle)}" · ${fdate(l.date)}</p></div>
+    <div class="stack" style="gap:10px"><button class="btn" data-act="ext-doc" data-id="${l.id}">${I.doc.replace('<svg', '<svg width="20" height="20"')} Get the full text lesson</button>
+    <div class="row" style="justify-content:space-between"><button class="linkbtn" data-act="ext-yt">Watch the video</button><button class="linkbtn" data-go="assign-${l.id}">This week's assignment (${n} responses) →</button></div></div></div>`;
+}
+const scard = (go, ic, t, d, cta) => `<button class="scard" data-go="${go}"><span class="top"><span class="ico teal">${ic}</span><h3>${t}</h3></span><p>${d}</p><span class="go">${cta} →</span></button>`;
+
+/* ---------- library ---------- */
+function vLibrary() {
+  const q = UI.libSearch;
+  return `<div class="wrap stack" style="gap:20px">
+    <div class="pagehead"><div class="eyebrow">Lesson library</div><h1>All free lessons</h1><p>${S.lessons.length} lessons, newest first. Search by video title or topic.</p></div>
+    <div class="searchbar" style="background:#fff;border:2px solid var(--line)"><div class="sfield">${I.search}<input id="libq" data-live="lib" type="search" placeholder="Search lessons" value="${esc(q)}" autocomplete="off" aria-label="Search lessons"></div></div>
+    <div class="panel" id="libres" style="padding-block:6px">${libList(q)}</div>
+  </div>`;
+}
+function libList(q) {
+  const list = q.trim() ? searchLessons(q) : lessonsSorted();
+  if (!list.length) return `<p style="padding:18px 0">No lesson matched "${esc(q)}". Try fewer words, or <button class="linkbtn" data-go="qa">ask Anming</button>.</p>`;
+  let out = '', year = '';
+  const shown = list.slice(0, UI.libShow);
+  for (const l of shown) {
+    const y = l.date.slice(0, 4);
+    if (!q.trim() && y !== year) { year = y; out += `<div class="yearhead">${y}</div>`; }
+    out += `<div class="libitem"><div style="min-width:0"><h3><button class="linkbtn" style="font-size:1.05rem;color:var(--ink);text-align:left;padding:0" data-go="lesson-${l.id}">${hl(l.title, q)}</button>${l.id === S.lotw ? ' <span class="chip teal">This week</span>' : ''}</h3><div class="meta">${fdate(l.date, true)} · Video: ${hl(l.ytTitle, q)}</div></div>
+      <div class="row"><button class="btn sm" data-act="ext-doc" data-id="${l.id}">Full text lesson</button><button class="btn ghost sm" data-go="assign-${l.id}">Assignment</button></div></div>`;
+  }
+  if (list.length > shown.length) out += `<div style="padding:14px 0;text-align:center"><button class="btn ghost sm" data-act="lib-more">Show more lessons (${list.length - shown.length} more)</button></div>`;
+  return out;
+}
+
+/* ---------- lesson page ---------- */
+function vLesson(id, viaWeek) {
+  const l = lesson(id);
+  if (!l) return `<div class="wrap"><div class="empty">That lesson is no longer available. <button class="linkbtn" data-go="library">See all lessons</button></div></div>`;
+  const isW = l.id === S.lotw;
+  const n = S.responses.filter(r => r.lessonId === l.id).length;
+  return `<div class="wrap stack" style="gap:20px">
+    ${viaWeek ? '' : '<button class="back" data-act="back">← Back</button>'}
+    <div class="pagehead">${isW ? `<span class="chip teal" style="align-self:flex-start">${I.star.replace('<svg', '<svg width="14" height="14"')} Lesson of the Week</span>` : `<div class="eyebrow">Free lesson</div>`}
+      <h1>${esc(l.title)}</h1><p>Published ${fdate(l.date, true)} · From the video "${esc(l.ytTitle)}"</p></div>
+    <div class="lessonhero" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))">
+      <div class="doccta"><h3 style="color:#fff;font-size:1.25rem">The full text lesson</h3>
+        <p>Explanations, exercises, answer keys and speaking activities. Work through it at your own pace.</p>
+        <button class="btn" data-act="ext-doc" data-id="${l.id}">${I.doc.replace('<svg', '<svg width="22" height="22"')} Get the Full Text Lesson</button>
+        <p>Opens in Google Docs. Want your own copy? Use File → Make a copy, or File → Download.</p></div>
+      <div class="assigncard"><span class="chip coral" style="align-self:flex-start">Community assignment</span>
+        <p style="color:var(--ink)">${esc(l.assignment.intro)}</p>
+        <ol class="plist">${l.assignment.prompts.map(p => `<li>${esc(p)}</li>`).join('')}</ol>
+        <button class="btn" data-go="assign-${l.id}">${n ? `Respond or see ${n} response${n > 1 ? 's' : ''}` : 'Be the first to respond'}</button></div>
+    </div>
+    <div class="row"><button class="btn ghost" data-act="ext-yt">${I.yt.replace('<svg', '<svg width="20" height="20"')} Watch the original video</button></div>
+    ${note('Full lesson vs. community assignment', 'The Google Doc is the master copy, so when Anming edits it every member sees the update. No PDFs. The assignment is separate: one short prompt (or a choice of prompts) to use the English from the lesson in the community.')}
+  </div>`;
+}
+
+/* ---------- assignment ---------- */
+function vAssign(id) {
+  const l = lesson(id) || lesson(S.lotw);
+  const list = S.responses.filter(r => r.lessonId === l.id).sort((a, b) => b.date.localeCompare(a.date));
+  const mine = list.filter(r => r.memberId === meId());
+  const A = UI.assign;
+  if (A.prompt >= l.assignment.prompts.length) A.prompt = 0;
+  const multi = l.assignment.prompts.length > 1;
+  return `<div class="wrap stack" style="gap:20px">
+    <div class="pagehead"><div class="eyebrow">${l.id === S.lotw ? 'Weekly Assignment' : 'Assignment from ' + fdate(l.date, true)}</div><h1>${esc(l.title)}</h1>
+    <div class="row"><button class="linkbtn" data-act="ext-doc" data-id="${l.id}">Open the full text lesson</button>${l.id !== S.lotw ? `<button class="linkbtn" data-go="assign">Go to this week's assignment</button>` : ''}</div></div>
+    ${rule('<strong>What belongs here:</strong> Choose a prompt and respond by text or audio. Audio maximum: one minute. Other members can read and listen to responses, but only Anming gives feedback, and she does that occasionally, not on every response.')}
+    ${isAdmin() ? note('You are viewing as Anming', 'Use "Give feedback" on any response. The member gets an email. Delete removes a response.') : `
+    <section class="panel composer" aria-labelledby="yourresp">
+      <h2 id="yourresp" style="font-size:1.35rem">${mine.length ? 'Add another response' : 'Your response'}</h2>
+      <p style="color:var(--ink)">${esc(l.assignment.intro)}</p>
+      ${multi ? `<div class="choices" role="radiogroup" aria-label="Choose a prompt">${l.assignment.prompts.map((p, i) => `<label class="choice"><input type="radio" name="prompt" value="${i}" ${A.prompt === i ? 'checked' : ''} data-act="pick-prompt"><span><b style="font-family:var(--display)">Prompt ${i + 1}.</b> ${esc(p)}</span></label>`).join('')}</div>`
+        : `<div class="choice" style="cursor:default"><span>${esc(l.assignment.prompts[0])}</span></div>`}
+      <div class="seg" role="group" aria-label="Response type"><button type="button" data-act="mode" data-mode="text" aria-pressed="${A.mode === 'text'}">${I.text} Write</button><button type="button" data-act="mode" data-mode="audio" aria-pressed="${A.mode === 'audio'}">${I.mic} Record audio</button></div>
+      ${A.mode === 'text'
+        ? `<div class="field"><label class="lab" for="atext">Your answer</label><textarea class="input" id="atext" data-live="atext" placeholder="Write your answer here.">${esc(A.text)}</textarea></div><button class="btn" data-act="submit-text" data-id="${l.id}">Post my response</button>`
+        : `<div id="rec">${recUI()}</div>`}
+    </section>`}
+    <section class="stack" aria-labelledby="resph">
+      <div class="row" style="justify-content:space-between"><h2 id="resph" style="font-size:1.35rem">Member responses (${list.length})</h2><span class="noreplies">${I.noreply} Members can't reply to responses</span></div>
+      ${list.length ? list.map(r => respCard(r, l)).join('') : '<div class="empty">No responses yet. Yours could be the first.</div>'}
+    </section>
+  </div>`;
+}
+function respCard(r, l) {
+  const m = member(r.memberId), own = r.memberId === meId();
+  const editing = UI.editing && UI.editing.id === r.id;
+  let body;
+  if (r.type === 'audio') body = player(r.id, r.dur || 30);
+  else if (editing) body = editBox(r.text);
+  else body = `<div class="body">${esc(r.text)}</div>`;
+  return `<article class="post ${own ? 'mine' : ''}" id="p-${r.id}">
+    <div class="ph">${who(m, r.date, own ? ' · You' : '')}<span class="chip">${r.type === 'audio' ? 'Audio' : 'Text'}</span></div>
+    ${l.assignment.prompts.length > 1 ? `<div class="promptlabel">Prompt ${r.prompt + 1}: ${esc(l.assignment.prompts[r.prompt] || '')}</div>` : ''}
+    ${body}
+    ${r.feedback ? `<div class="fb">${who(member('anming'), r.feedback.date, ' · Feedback')}<div class="body">${esc(r.feedback.text)}</div></div>` : ''}
+    ${UI.feedbackFor === r.id ? `<div class="replybox"><label class="lab" for="fbtext">Feedback for ${esc(m.display)}</label><textarea class="input" id="fbtext" placeholder="Your feedback">${r.feedback ? esc(r.feedback.text) : ''}</textarea><div class="row"><button class="btn sm" data-act="fb-send" data-id="${r.id}">Post feedback and email ${esc(m.display)}</button><button class="linkbtn quiet" data-act="cancel">Cancel</button></div></div>` : ''}
+    ${actions('response', r.id, null, own, r.type === 'audio')}
+  </article>`;
+}
+function editBox(text) {
+  return `<div class="replybox"><textarea class="input" id="edittext">${esc(text)}</textarea><div class="row"><button class="btn sm" data-act="edit-save">Save changes</button><button class="linkbtn quiet" data-act="cancel">Cancel</button></div></div>`;
+}
+function actions(kind, id, parentId, own, noEdit) {
+  const k = `${kind}:${id}`;
+  if (UI.confirming === k) return `<div class="confirm">Delete this ${kind === 'response' ? 'response' : 'post'}? This can't be undone.<button class="btn danger sm" data-act="del-yes" data-kind="${kind}" data-id="${id}" data-parent="${parentId || ''}">Delete</button><button class="linkbtn quiet" data-act="cancel">Keep it</button></div>`;
+  if (UI.reporting === k) return `<div class="reportbox"><b style="font-family:var(--display)">Report this to Anming</b><div class="opts">${['Spam or advertising', 'Rude or harmful', 'Off-topic', 'Something else'].map((o, i) => `<label><input type="radio" name="rr" value="${o}" ${i === 0 ? 'checked' : ''}>${o}</label>`).join('')}</div>
+    <p class="small">Anming reviews every report. The post stays up until she decides.</p><div class="row"><button class="btn sm" data-act="report-send" data-kind="${kind}" data-id="${id}" data-parent="${parentId || ''}">Send report</button><button class="linkbtn quiet" data-act="cancel">Cancel</button></div></div>`;
+  let a = '';
+  if (kind === 'response' && isAdmin()) a += `<button class="linkbtn" data-act="fb-open" data-id="${id}">${S.responses.find(r => r.id === id)?.feedback ? 'Edit feedback' : 'Give feedback'}</button>`;
+  if (kind === 'question' && isAdmin()) a += `<button class="linkbtn" data-act="ans-open" data-id="${id}">${S.qa.find(q => q.id === id)?.answer ? 'Edit answer' : 'Answer'}</button>`;
+  if (own && !noEdit) a += `<button class="linkbtn" data-act="edit" data-kind="${kind}" data-id="${id}" data-parent="${parentId || ''}">Edit</button>`;
+  if (own || isAdmin()) a += `<button class="linkbtn red" data-act="del" data-kind="${kind}" data-id="${id}" data-parent="${parentId || ''}">Delete${!own && isAdmin() ? ' (admin)' : ''}</button>`;
+  if (!own && !isAdmin()) a += `<button class="linkbtn quiet" data-act="report" data-kind="${kind}" data-id="${id}" data-parent="${parentId || ''}">Report</button>`;
+  return a ? `<div class="pacts">${a}</div>` : '';
+}
+
+/* ---------- introductions ---------- */
+function vIntros() {
+  const list = S.intros.slice().sort((a, b) => b.date.localeCompare(a.date));
+  const hasMine = S.intros.some(i => i.memberId === meId());
+  return `<div class="wrap stack" style="gap:20px">
+    <div class="pagehead"><div class="eyebrow">Introductions</div><h1>Say hello</h1></div>
+    ${rule('<strong>What belongs here:</strong> Introduce yourself and welcome other learners. This is the place for friendly conversation, so reply to each other here.')}
+    ${isAdmin() ? '' : `<form class="panel composer" data-form="intro">
+      <label class="lab" for="introtext">${hasMine ? 'Post another introduction' : 'Your introduction'}</label>
+      <p class="small" style="margin-top:-8px">Tell us your name, where you're from, and the biggest challenge you're currently having with English. Be specific.</p>
+      <textarea class="input" id="introtext" placeholder="Hi! I'm ... from ... My biggest challenge with English is ..."></textarea>
+      <button class="btn" type="submit" style="align-self:flex-start">Post my introduction</button></form>`}
+    <div class="stack">${list.map(introCard).join('')}</div>
+  </div>`;
+}
+function introCard(p) {
+  const m = member(p.memberId), own = p.memberId === meId();
+  const editing = UI.editing && UI.editing.id === p.id;
+  return `<article class="post ${own ? 'mine' : ''}" id="p-${p.id}">
+    <div class="ph">${who(m, p.date, own ? ' · You' : '')}</div>
+    ${editing ? editBox(p.text) : `<div class="body">${esc(p.text)}</div>`}
+    ${actions('intro', p.id, null, own)}
+    ${p.replies.length ? `<div class="replies">${p.replies.map(r => replyCard(r, p.id)).join('')}</div>` : ''}
+    ${UI.replying === p.id
+      ? `<div class="replybox"><label class="lab" for="replytext">Reply to ${esc(m.display)}</label><textarea class="input" id="replytext" style="min-height:80px" placeholder="Welcome ${esc(m.display)}!"></textarea><div class="row"><button class="btn sm" data-act="reply-send" data-id="${p.id}">Post reply</button><button class="linkbtn quiet" data-act="cancel">Cancel</button></div></div>`
+      : `<button class="btn ghost sm" style="align-self:flex-start" data-act="reply-open" data-id="${p.id}">Reply</button>`}
+  </article>`;
+}
+function replyCard(r, pid) {
+  const m = member(r.memberId), own = r.memberId === meId();
+  const editing = UI.editing && UI.editing.id === r.id;
+  return `<div class="reply stack" style="gap:8px" id="p-${r.id}">${who(m, r.date, own ? ' · You' : '')}
+    ${editing ? editBox(r.text) : `<div class="body">${esc(r.text)}</div>`}
+    ${actions('reply', r.id, pid, own)}</div>`;
+}
+
+/* ---------- Q&A ---------- */
+function vQA() {
+  const q = UI.qaSearch;
+  let list = S.qa.slice().sort((a, b) => b.date.localeCompare(a.date));
+  if (q.trim()) {
+    const fake = list.map(x => ({ id: x.id, date: x.date, title: x.q, ytTitle: x.detail, keywords: x.answer ? x.answer.text : '' }));
+    const ids = searchLessons(q, fake).map(x => x.id);
+    list = ids.map(id => S.qa.find(x => x.id === id));
+  }
+  return `<div class="wrap stack" style="gap:20px">
+    <div class="pagehead"><div class="eyebrow">Ask a Question</div><h1>Questions and answers</h1></div>
+    ${rule('<strong>What belongs here:</strong> Ask Anming a specific English question. She answers here, and you get an email when she does. Everyone can read questions and answers, but only Anming can reply.')}
+    ${isAdmin() ? '' : `<form class="panel composer" data-form="ask">
+      <div class="field"><label class="lab" for="askq">Your question</label><input class="input" id="askq" placeholder='e.g. What&#39;s the difference between "I&#39;ve been working" and "I worked"?' maxlength="160"></div>
+      <div class="field"><label class="lab" for="askd">Details or an example <span class="faint" style="font-weight:400">(optional)</span></label><textarea class="input" id="askd" style="min-height:80px" placeholder="Add the sentence you're unsure about."></textarea></div>
+      <button class="btn" type="submit" style="align-self:flex-start">Post my question</button></form>`}
+    <div class="searchbar" style="background:#fff;border:2px solid var(--line)"><div class="sfield">${I.search}<input id="qaq" data-live="qa" type="search" placeholder="Search questions and answers" value="${esc(q)}" autocomplete="off" aria-label="Search questions"></div></div>
+    <div class="stack" id="qalist">${qaList(list)}</div>
+    ${note('Simple by design', 'One question, one answer from Anming. No status labels, no member replies, no side conversations. Unanswered questions show up in her admin inbox.')}
+  </div>`;
+}
+function qaList(list) {
+  return list.length ? list.map(qaCard).join('') : '<div class="empty">No questions match that search.</div>';
+}
+function qaCard(x) {
+  const m = member(x.memberId), own = x.memberId === meId();
+  const editing = UI.editing && UI.editing.id === x.id;
+  return `<article class="post ${own ? 'mine' : ''}" id="p-${x.id}">
+    <div class="ph">${who(m, x.date, own ? ' · You' : '')}</div>
+    ${editing ? `<div class="replybox"><input class="input" id="editq" value="${esc(x.q)}"><textarea class="input" id="edittext" style="min-height:80px">${esc(x.detail)}</textarea><div class="row"><button class="btn sm" data-act="edit-save">Save changes</button><button class="linkbtn quiet" data-act="cancel">Cancel</button></div></div>`
+      : `<div class="qtitle">${esc(x.q)}</div>${x.detail ? `<div class="body">${esc(x.detail)}</div>` : ''}`}
+    ${x.answer ? `<div class="answer">${who(member('anming'), x.answer.date, ' · Answer')}<div class="body">${esc(x.answer.text)}</div></div>` : (own ? '<p class="small">You\'ll get an email when Anming answers.</p>' : '')}
+    ${UI.answerFor === x.id ? `<div class="replybox"><label class="lab" for="anstext">Your answer</label><textarea class="input" id="anstext">${x.answer ? esc(x.answer.text) : ''}</textarea><div class="row"><button class="btn sm" data-act="ans-send" data-id="${x.id}">Post answer and email ${esc(m.display)}</button><button class="linkbtn quiet" data-act="cancel">Cancel</button></div></div>` : ''}
+    ${actions('question', x.id, null, own)}
+  </article>`;
+}
+
+/* ---------- profile ---------- */
+function vProfile() {
+  const me = member(meId());
+  return `<div class="wrap stack" style="gap:20px;max-width:720px">
+    <div class="pagehead"><div class="eyebrow">Your profile</div><h1>Profile and email settings</h1></div>
+    <form class="panel stack" data-form="profile">
+      <h2 style="font-size:1.25rem">What other members see</h2>
+      <div class="field"><label class="lab" for="pdisp">Display name</label><input class="input" id="pdisp" value="${esc(me.display)}" maxlength="30"></div>
+      <div class="field"><span class="lab">Profile photo</span>${photoEditor(me)}</div>
+      <button class="btn" type="submit" style="align-self:flex-start">Save changes</button>
+    </form>
+    <div class="panel stack">
+      <h2 style="font-size:1.25rem">Private</h2>
+      <div class="fine">${I.lock}<span>Only you and Anming can see this. It is never shown to other members.</span></div>
+      <div><span class="lab">Name</span><p style="color:var(--ink)">${esc(me.name)}</p></div>
+      <div><span class="lab">Email</span><p style="color:var(--ink)">${esc(me.email)}</p></div>
+    </div>
+    <div class="panel stack">
+      <h2 style="font-size:1.25rem">Emails</h2>
+      <p class="small">We never email you every time someone posts or a new lesson goes up.</p>
+      <label class="switch"><input type="checkbox" id="pref-roundup" data-act="pref" data-k="roundup" ${S.prefs.roundup ? 'checked' : ''}><span class="sw"></span><span><b>Monthly community roundup</b><br><span class="small muted">About once a month: new lessons and what you may have missed.</span></span></label>
+      <label class="switch"><input type="checkbox" id="pref-personal" data-act="pref" data-k="personal" ${S.prefs.personal ? 'checked' : ''}><span class="sw"></span><span><b>When Anming answers or gives feedback</b><br><span class="small muted">An email when she answers your question or comments on your assignment.</span></span></label>
+    </div>
+    ${note('Kept simple on purpose', 'No country, bio, badges or points. Members can change their display name and photo at any time. Every email also has a one-click unsubscribe link.')}
+  </div>`;
+}
+
+/* ---------- programs ---------- */
+function vPrograms() {
+  return `<div class="wrap stack" style="gap:20px;max-width:860px">
+    <div class="pagehead"><div class="eyebrow">More from English Evolution</div><h1>Want to go further?</h1><p>The free community is yours to use as long as you like. If you want more structure or live practice, there are two paid programs.</p></div>
+    ${paidRow()}
+    ${note('Paid options stay quiet', 'Reachable from the website’s Options menu, the line at the bottom of the community home page, and the featured block when Anming chooses to promote something. No pop-ups and no banners in every section.')}
+  </div>`;
+}
+
+/* ---------- audio: recorder + player ---------- */
+const REC_MAX = 60;
+const R = { state: 'idle', secs: 0, timer: null, media: null, chunks: [], url: null, sim: false, stream: null, level: null };
+function recUI() {
+  if (R.state === 'idle') return `<div class="rec"><span class="lbl">Tap to start recording. Up to 1 minute.</span>
+    <button class="bigrec" data-act="rec-start" aria-label="Start recording"><i></i></button>
+    <div class="clock">0:00 <small>/ 1:00</small></div>
+    ${R.err ? `<span class="simnote">${esc(R.err)}</span>` : ''}</div>`;
+  if (R.state === 'recording') return `<div class="rec"><span class="lbl">Recording… tap to stop</span>
+    <button class="bigrec stop" data-act="rec-stop" aria-label="Stop recording"><i></i></button>
+    <div class="clock" id="recclock">${mmss(R.secs)} <small>/ 1:00</small></div>
+    <div class="meter"><i id="recmeter" style="width:${R.secs / REC_MAX * 100}%"></i></div>
+    <div class="bars" id="recbars">${'<i style="height:6px"></i>'.repeat(24)}</div>
+    ${R.sim ? '<span class="simnote">Microphone isn\'t available in this preview, so this recording is simulated.</span>' : ''}</div>`;
+  return `<div class="rec"><span class="lbl">Listen back before you post.</span>
+    ${player('draft', R.secs)}
+    <div class="row"><button class="btn ghost sm" data-act="rec-redo">Re-record</button><button class="btn coral" data-act="rec-submit" data-id="${UI.route.split('-')[1] || S.lotw}">Post my audio response</button></div>
+    ${R.sim ? '<span class="simnote">Simulated recording (no microphone in this preview).</span>' : ''}</div>`;
+}
+function refreshRec() { const el = $('#rec'); if (el) el.innerHTML = recUI(); }
+async function recStart() {
+  R.err = ''; R.secs = 0; R.chunks = []; R.sim = false;
+  if (R.url) { URL.revokeObjectURL(R.url); R.url = null; }
+  try {
+    if (!navigator.mediaDevices || !window.MediaRecorder) throw new Error('unsupported');
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    R.stream = stream;
+    const types = ['audio/webm;codecs=opus', 'audio/mp4', 'audio/webm'];
+    const mt = types.find(t => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t));
+    R.media = new MediaRecorder(stream, mt ? { mimeType: mt } : undefined);
+    R.media.ondataavailable = e => e.data.size && R.chunks.push(e.data);
+    R.media.onstop = () => { R.url = URL.createObjectURL(new Blob(R.chunks, { type: R.media.mimeType || 'audio/webm' })); stream.getTracks().forEach(t => t.stop()); R.state = 'done'; refreshRec(); };
+    R.media.start();
+    try { const ac = new (window.AudioContext || window.webkitAudioContext)(); const an = ac.createAnalyser(); an.fftSize = 64; ac.createMediaStreamSource(stream).connect(an); R.level = { ac, an, buf: new Uint8Array(an.frequencyBinCount) }; } catch (e) { R.level = null; }
+  } catch (e) {
+    R.sim = true; R.media = null; R.level = null;
+  }
+  R.state = 'recording'; refreshRec();
+  const t0 = Date.now();
+  R.timer = setInterval(() => {
+    R.secs = Math.min(REC_MAX, (Date.now() - t0) / 1000);
+    const c = $('#recclock'); if (c) c.innerHTML = mmss(R.secs) + ' <small>/ 1:00</small>';
+    const m = $('#recmeter'); if (m) m.style.width = (R.secs / REC_MAX * 100) + '%';
+    const bars = document.querySelectorAll('#recbars i');
+    if (R.level) R.level.an.getByteFrequencyData(R.level.buf);
+    bars.forEach((b, i) => { const v = R.level ? R.level.buf[i % R.level.buf.length] / 255 : Math.random() * .8 + .1; b.style.height = Math.max(4, v * 34) + 'px'; });
+    if (R.secs >= REC_MAX) { recStop(); toast('One minute is the maximum, so recording stopped.'); }
+  }, 120);
+}
+function recStop() {
+  clearInterval(R.timer); R.secs = Math.max(1, Math.round(R.secs));
+  if (R.level) { try { R.level.ac.close(); } catch (e) {} R.level = null; }
+  if (R.media && R.media.state !== 'inactive') R.media.stop();
+  else { R.state = 'done'; refreshRec(); }
+}
+function recReset() { clearInterval(R.timer); if (R.media && R.media.state !== 'inactive') { try { R.media.onstop = null; R.media.stop(); } catch (e) {} } if (R.stream) R.stream.getTracks().forEach(t => t.stop()); R.state = 'idle'; R.secs = 0; }
+
+function player(id, dur) {
+  return `<div class="player" data-pid="${id}"><button class="pbtn" data-act="play" data-id="${id}" aria-label="Play">${I.play}</button><span class="track"><i></i></span><span class="dur">${mmss(dur)}</span></div>`;
+}
+const P = { id: null, audio: null, raf: null, start: 0, dur: 0, utter: null };
+function stopPlayback() {
+  if (P.audio) { P.audio.pause(); P.audio = null; }
+  if (P.utter && window.speechSynthesis) speechSynthesis.cancel();
+  P.utter = null; cancelAnimationFrame(P.raf);
+  if (P.id) { const el = document.querySelector(`[data-pid="${P.id}"]`); if (el) { el.querySelector('.pbtn').innerHTML = I.play; el.querySelector('.track i').style.width = '0'; } }
+  P.id = null;
+}
+function play(id) {
+  if (P.id === id) { stopPlayback(); return; }
+  stopPlayback();
+  const el = document.querySelector(`[data-pid="${id}"]`); if (!el) return;
+  const r = id === 'draft' ? { url: R.url, dur: R.secs } : S.responses.find(x => x.id === id);
+  const url = id === 'draft' ? R.url : blobs[id];
+  P.id = id; el.querySelector('.pbtn').innerHTML = I.pause;
+  const bar = el.querySelector('.track i'), lab = el.querySelector('.dur');
+  const total = r.dur || 30;
+  if (url) {
+    const a = new Audio(url); P.audio = a; a.play().catch(() => {});
+    a.onended = stopPlayback;
+    const tick = () => { if (P.audio !== a) return; const d = isFinite(a.duration) ? a.duration : total; bar.style.width = (a.currentTime / d * 100) + '%'; lab.textContent = mmss(a.currentTime); P.raf = requestAnimationFrame(tick); };
+    tick(); return;
+  }
+  // Sample responses: read the example transcript aloud with the browser's voice so the player can be tried.
+  if (r.transcript && window.speechSynthesis) {
+    const u = new SpeechSynthesisUtterance(r.transcript); u.lang = 'en-US'; u.rate = 1; P.utter = u;
+    u.onend = () => { if (P.utter === u) stopPlayback(); };
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  }
+  P.start = performance.now(); P.dur = total;
+  const tick = () => { if (P.id !== id) return; const t = (performance.now() - P.start) / 1000; bar.style.width = Math.min(100, t / total * 100) + '%'; lab.textContent = mmss(Math.min(t, total)); if (t >= total && !P.utter) { stopPlayback(); return; } P.raf = requestAnimationFrame(tick); };
+  tick();
+}
+
+/* ---------- admin ---------- */
+function adminBar(inAdmin) {
+  return `<div class="adminbar"><div class="wrap"><span><b>Admin</b> · signed in as Anming</span>
+    <button data-go="${inAdmin ? 'home' : 'admin-inbox'}">${inAdmin ? 'View the community as members see it' : 'Back to admin'}</button></div></div>`;
+}
+function inboxCounts() {
+  return { q: S.qa.filter(x => !x.answer).length, r: S.responses.filter(x => !x.seen).length, rep: S.reports.length };
+}
+function adminTabs(r) {
+  const c = inboxCounts(), tot = c.q + c.r + c.rep;
+  const cur = r.startsWith('admin-edit') ? 'admin-lessons' : r;
+  const t = (id, icon, label, n) => `<button class="tab" data-go="${id}" ${cur === id ? 'aria-current="page"' : ''}>${icon}<span>${label}</span>${n ? `<span class="count">${n}</span>` : ''}</button>`;
+  return `<div class="tabs"><div class="wrap">
+    ${t('admin-inbox', I.inbox, 'Inbox', tot)}${t('admin-add', I.plus, 'Add lesson')}${t('admin-lessons', I.book, 'Lessons')}${t('admin-promo', I.mega, 'Featured block')}${t('admin-members', I.users, 'Members')}
+  </div></div>`;
+}
+function vAdmin(sub) {
+  if (sub === 'inbox') return vInbox();
+  if (sub === 'add') return vLessonForm(null);
+  if (sub.startsWith('edit')) return vLessonForm(+sub.split('-')[1]);
+  if (sub === 'lessons') return vAdminLessons();
+  if (sub === 'promo') return vPromo();
+  if (sub === 'members') return vMembers();
+  return vInbox();
+}
+
+/* inbox */
+function vInbox() {
+  const c = inboxCounts();
+  const qs = S.qa.filter(x => !x.answer).sort((a, b) => a.date.localeCompare(b.date));
+  const rs = S.responses.filter(x => !x.seen).sort((a, b) => b.date.localeCompare(a.date));
+  const n = (k) => `<span class="n ${k ? '' : 'zero'}">${k}</span>`;
+  return `<div class="wrap stack" style="gap:30px">
+    <div class="pagehead"><div class="eyebrow">Admin inbox</div><h1>Things that may need you</h1><p>${c.q + c.r + c.rep ? 'Questions waiting for an answer, new assignment responses, and reported posts.' : 'All clear. Nothing is waiting for you.'}</p></div>
+
+    <section class="inboxsec"><header><h2>Questions to answer ${n(c.q)}</h2><button class="linkbtn" data-go="qa">Open Q&amp;A</button></header>
+      ${qs.length ? qs.map(x => { const m = member(x.memberId); return `<div class="item"><span class="ctx">Q&amp;A · ${esc(m.display)} · ${fdate(x.date)}</span><div class="qtitle">${esc(x.q)}</div>${x.detail ? `<p style="color:var(--ink)">${esc(x.detail)}</p>` : ''}
+        ${UI.answerFor === x.id ? `<div class="replybox"><textarea class="input" id="anstext" placeholder="Your answer"></textarea><div class="row"><button class="btn sm" data-act="ans-send" data-id="${x.id}">Post answer and email ${esc(m.display)}</button><button class="linkbtn quiet" data-act="cancel">Cancel</button></div></div>`
+          : `<div class="row"><button class="btn sm" data-act="ans-open" data-id="${x.id}">Answer</button><button class="linkbtn red" data-act="admin-del-q" data-id="${x.id}">Delete question</button></div>`}</div>`; }).join('')
+        : '<div class="empty">No questions waiting.</div>'}
+    </section>
+
+    <section class="inboxsec"><header><h2>New assignment responses ${n(c.r)}</h2>${rs.length ? '<button class="linkbtn" data-act="seen-all">Mark all as seen</button>' : ''}</header>
+      ${rs.length ? rs.map(r => { const m = member(r.memberId), l = lesson(r.lessonId); return `<div class="item"><span class="ctx">${esc(l ? l.title : 'Lesson')} · ${esc(m.display)} · ${fdate(r.date)} · ${r.type === 'audio' ? 'Audio' : 'Text'}</span>
+        ${r.type === 'audio' ? player(r.id, r.dur || 30) : `<p style="color:var(--ink);white-space:pre-wrap">${esc(r.text)}</p>`}
+        ${UI.feedbackFor === r.id ? `<div class="replybox"><textarea class="input" id="fbtext" placeholder="Your feedback (optional, members don't expect it on every response)"></textarea><div class="row"><button class="btn sm" data-act="fb-send" data-id="${r.id}">Post feedback and email ${esc(m.display)}</button><button class="linkbtn quiet" data-act="cancel">Cancel</button></div></div>`
+          : `<div class="row"><button class="btn sm" data-act="fb-open" data-id="${r.id}">Give feedback</button><button class="btn ghost sm" data-act="seen" data-id="${r.id}">Mark as seen</button><button class="linkbtn red" data-act="admin-del-r" data-id="${r.id}">Delete</button></div>`}</div>`; }).join('')
+        : '<div class="empty">You have seen every response.</div>'}
+    </section>
+
+    <section class="inboxsec"><header><h2>Reported posts ${n(c.rep)}</h2></header>
+      ${S.reports.length ? S.reports.map(reportItem).join('') : '<div class="empty">No reports.</div>'}
+    </section>
+    ${note('Lightweight on purpose', 'Three lists, no filters, charts or analytics. Answering a question or giving feedback emails that one member. Per brief item 20, this inbox can be priced as a separate line item. Without it, Anming would check the Q&amp;A and assignment pages directly and get an email for each report.')}
+  </div>`;
+}
+function findContent(rep) {
+  if (rep.kind === 'reply') { const p = S.intros.find(i => i.id === rep.parentId); const r = p && p.replies.find(x => x.id === rep.targetId); return r && { text: r.text, memberId: r.memberId, where: 'Reply in Introductions' }; }
+  if (rep.kind === 'intro') { const p = S.intros.find(i => i.id === rep.targetId); return p && { text: p.text, memberId: p.memberId, where: 'Introduction' }; }
+  if (rep.kind === 'response') { const p = S.responses.find(i => i.id === rep.targetId); return p && { text: p.type === 'audio' ? '(audio response) ' + (p.transcript || '') : p.text, memberId: p.memberId, where: 'Assignment response' }; }
+  if (rep.kind === 'question') { const p = S.qa.find(i => i.id === rep.targetId); return p && { text: p.q + (p.detail ? '\n' + p.detail : ''), memberId: p.memberId, where: 'Q&A question' }; }
+}
+function reportItem(rep) {
+  const c = findContent(rep);
+  if (!c) return '';
+  const m = member(c.memberId);
+  return `<div class="item" style="border-left:5px solid var(--danger)"><span class="ctx">${c.where} by ${esc(m.display)} · reported by ${esc(member(rep.reporterId).display)} · ${fdate(rep.date)}</span>
+    <span class="chip red" style="align-self:flex-start">${esc(rep.reason)}</span>
+    <p style="color:var(--ink);white-space:pre-wrap;background:var(--bg);border-radius:12px;padding:10px 12px">${esc(c.text)}</p>
+    <div class="row"><button class="btn danger sm" data-act="rep-delete" data-id="${rep.id}">Delete the post</button><button class="btn ghost sm" data-act="rep-suspend" data-id="${rep.id}">Delete and suspend ${esc(m.display)}</button><button class="linkbtn" data-act="rep-keep" data-id="${rep.id}">Keep it, dismiss report</button></div></div>`;
+}
+
+/* add / edit lesson */
+function blankForm() { return { id: null, title: '', doc: '', yt: '', intro: 'Choose one of the questions below and answer by text or audio.', prompts: [''], keywords: '', date: TODAY, lotw: true }; }
+function vLessonForm(id) {
+  if (!UI.lessonForm || UI.lessonForm.id !== id) {
+    if (id) { const l = lesson(id); UI.lessonForm = { id, title: l.title, doc: l.doc, yt: l.yt, intro: l.assignment.intro, prompts: l.assignment.prompts.slice(), keywords: l.keywords, ytTitle: l.ytTitle, date: l.date, lotw: S.lotw === id }; }
+    else UI.lessonForm = blankForm();
+  }
+  if (UI.published && !id) return vPublished();
+  const f = UI.lessonForm, e = UI.formErr;
+  const st = (n, done, label, inner) => `<div class="fstep ${done ? 'done' : ''}"><span class="n">${done ? '✓' : n}</span><div class="stack" style="gap:8px"><label class="lab" style="margin:0" ${typeof label === 'string' && label.startsWith('for:') ? '' : ''}>${label}</label>${inner}</div></div>`;
+  return `<div class="wrap stack" style="gap:20px;max-width:760px">
+    ${id ? '<button class="back" data-go="admin-lessons">← All lessons</button>' : ''}
+    <div class="pagehead"><div class="eyebrow">${id ? 'Edit lesson' : 'Add a new lesson'}</div><h1>${id ? esc(f.title) : 'New weekly lesson'}</h1>${id ? '' : '<p>Paste four things and publish. About five minutes.</p>'}</div>
+    <form class="panel form5" data-form="lesson" novalidate>
+      ${st(1, f.title.trim(), 'Lesson title', `<input class="input" id="f-title" data-lf="title" value="${esc(f.title)}" placeholder="e.g. Parts of Speech">${e.title ? `<span class="err">${e.title}</span>` : ''}<span class="hint">Members search by this and by the YouTube video title.</span>`)}
+      ${st(2, /docs\.google\.com/.test(f.doc), 'Google Doc link (the full text lesson)', `<input class="input" id="f-doc" data-lf="doc" value="${esc(f.doc)}" placeholder="https://docs.google.com/document/d/…" inputmode="url">${e.doc ? `<span class="err">${e.doc}</span>` : ''}<span class="hint">In Google Docs, set Share → General access → "Anyone with the link" → Viewer.</span>`)}
+      ${st(3, /youtu/.test(f.yt), 'YouTube link <span class="faint" style="font-weight:400">(optional)</span>', `<input class="input" id="f-yt" data-lf="yt" value="${esc(f.yt)}" placeholder="https://www.youtube.com/watch?v=…" inputmode="url"><span class="hint">The video's title is fetched automatically and made searchable, so members can paste the exact video title.</span>`)}
+      ${st(4, f.prompts.some(p => p.trim()), "This week's community assignment", `
+        <input class="input" id="f-intro" data-lf="intro" value="${esc(f.intro)}" aria-label="Assignment instructions">
+        ${f.prompts.map((p, i) => `<div class="promptrow"><textarea class="input" style="min-height:64px" data-prompt="${i}" id="f-p${i}" placeholder="Prompt ${i + 1}" aria-label="Prompt ${i + 1}">${esc(p)}</textarea>${f.prompts.length > 1 ? `<button type="button" class="xbtn" data-act="lf-rmprompt" data-i="${i}" aria-label="Remove prompt ${i + 1}">×</button>` : ''}</div>`).join('')}
+        ${e.prompts ? `<span class="err">${e.prompts}</span>` : ''}
+        ${f.prompts.length < 5 ? `<button type="button" class="linkbtn" style="align-self:flex-start" data-act="lf-addprompt">+ Add another prompt (members choose one)</button>` : ''}`)}
+      ${st(5, false, id ? 'Save' : 'Publish', `
+        <label class="switch"><input type="checkbox" id="f-lotw" data-lf="lotw" ${f.lotw ? 'checked' : ''}><span class="sw"></span><span>Feature as <b>Lesson of the Week</b></span></label>
+        <details class="more"><summary>Optional extras</summary><div class="stack" style="margin-top:12px;gap:12px">
+          <div class="field"><label class="lab" for="f-kw">Extra search words</label><input class="input" id="f-kw" data-lf="keywords" value="${esc(f.keywords)}" placeholder="e.g. noun, verb, adjective"><span class="hint">Other words people might type. Separate with commas.</span></div>
+          <div class="field"><label class="lab" for="f-date">Publish date</label><input class="input" type="date" id="f-date" data-lf="date" value="${esc(f.date)}"></div>
+        </div></details>
+        <div class="row"><button class="btn" type="submit">${id ? 'Save changes' : 'Publish lesson'}</button>${id ? '' : '<button type="button" class="linkbtn quiet" data-act="lf-sample">Fill with an example</button>'}</div>`)}
+    </form>
+    ${note('Built around the five-minute workflow', 'One page, no page builder, no code. Title, Doc link, YouTube link, prompt, Publish. The lesson page, search entry, Lesson of the Week spot and assignment page are all created automatically. Nothing is emailed to members when a lesson is published; it shows up in the monthly roundup.')}
+  </div>`;
+}
+function vPublished() {
+  const l = lesson(UI.published);
+  return `<div class="wrap stack" style="gap:18px;max-width:640px">
+    <div class="panel stack" style="text-align:center;align-items:center">
+      <span class="ico" style="background:var(--ok-soft);color:var(--ok)">✓</span>
+      <h1 style="font-size:1.9rem">Published</h1>
+      <p><b style="color:var(--ink)">${esc(l.title)}</b> is live and searchable${S.lotw === l.id ? ', and it is now the Lesson of the Week' : ''}.</p>
+      <div class="row" style="justify-content:center"><button class="btn" data-act="view-published">See it as members do</button><button class="btn ghost" data-act="add-another">Add another lesson</button></div>
+    </div>
+    ${note('Try it', 'Switch to the Member view and search for the title you just published.')}
+  </div>`;
+}
+function vAdminLessons() {
+  const q = UI.adminLessonSearch;
+  const list = q.trim() ? searchLessons(q) : lessonsSorted();
+  return `<div class="wrap stack" style="gap:20px">
+    <div class="row" style="justify-content:space-between"><div class="pagehead"><div class="eyebrow">Lessons</div><h1>All lessons (${S.lessons.length})</h1></div><button class="btn" data-go="admin-add">${I.plus.replace('<svg', '<svg width="18" height="18"')} Add lesson</button></div>
+    <div class="searchbar" style="background:#fff;border:2px solid var(--line)"><div class="sfield">${I.search}<input id="alq" data-live="alq" type="search" placeholder="Find a lesson to edit" value="${esc(q)}" aria-label="Find a lesson"></div></div>
+    <div class="panel" style="padding-block:6px" id="allist">${adminLessonRows(list)}</div>
+  </div>`;
+}
+function adminLessonRows(list) {
+  return list.slice(0, 40).map(l => `<div class="libitem"><div style="min-width:0"><h3>${esc(l.title)} ${l.id === S.lotw ? '<span class="chip teal">Lesson of the Week</span>' : ''}</h3><div class="meta">${fdate(l.date, true)} · ${S.responses.filter(r => r.lessonId === l.id).length} responses</div></div>
+    <div class="row">${UI.confirming === 'lesson:' + l.id ? `<span class="confirm">Delete this lesson and its assignment responses?<button class="btn danger sm" data-act="lesson-del-yes" data-id="${l.id}">Delete</button><button class="linkbtn quiet" data-act="cancel">Keep</button></span>`
+      : `<button class="btn ghost sm" data-go="admin-edit-${l.id}">Edit</button>${l.id !== S.lotw ? `<button class="linkbtn" data-act="make-lotw" data-id="${l.id}">Make Lesson of the Week</button>` : ''}<button class="linkbtn red" data-act="lesson-del" data-id="${l.id}">Delete</button>`}</div></div>`).join('') || '<p style="padding:16px 0">No lessons match.</p>';
+}
+
+/* featured promotion */
+function vPromo() {
+  if (!UI.promoDraft) UI.promoDraft = Object.assign({}, S.promo);
+  const p = UI.promoDraft;
+  const dirty = JSON.stringify(p) !== JSON.stringify(S.promo);
+  return `<div class="wrap stack" style="gap:20px">
+    <div class="pagehead"><div class="eyebrow">Featured block</div><h1>Current promotion</h1><p>One block, shown right under the lesson search on the community home page. Only the current one is kept.</p></div>
+    <div class="panel row" style="justify-content:space-between">
+      <label class="switch"><input type="checkbox" id="pr-on" data-act="promo-toggle" ${S.promo.on ? 'checked' : ''}><span class="sw"></span><span><b>${S.promo.on ? 'Showing on the home page' : 'Turned off'}</b><br><span class="small muted">${S.promo.on ? 'Turn off when you have nothing to promote.' : 'Members see search, then the community sections.'}</span></span></label>
+      <span class="chip ${S.promo.on ? 'ok' : ''}">${S.promo.on ? 'Live' : 'Hidden'}</span>
+    </div>
+    <div class="twocol">
+      <form class="panel stack" data-form="promo">
+        <div class="field"><label class="lab" for="pr-tag">Small label <span class="faint" style="font-weight:400">(optional)</span></label><input class="input" id="pr-tag" data-pf="tag" value="${esc(p.tag)}" maxlength="30" placeholder="e.g. Now enrolling, Free workshop, New"></div>
+        <div class="field"><label class="lab" for="pr-h">Headline</label><input class="input" id="pr-h" data-pf="headline" value="${esc(p.headline)}" maxlength="80"></div>
+        <div class="field"><label class="lab" for="pr-t">Short text</label><textarea class="input" id="pr-t" data-pf="text" maxlength="220" style="min-height:90px">${esc(p.text)}</textarea><span class="hint"><span id="pr-count">${p.text.length}</span>/220 characters</span></div>
+        <div class="field"><span class="lab">Image <span class="faint" style="font-weight:400">(optional)</span></span><div class="row">${p.image ? `<img src="${p.image === 'HEADSHOT' ? HEADSHOT : p.image}" alt="" style="width:64px;height:64px;border-radius:12px;object-fit:cover">` : ''}<label class="btn ghost sm" for="pr-img" style="cursor:pointer">${p.image ? 'Replace image' : 'Add image'}</label><input type="file" id="pr-img" accept="image/*" hidden>${p.image ? '<button type="button" class="linkbtn red" data-act="promo-noimg">Remove</button>' : ''}</div></div>
+        <div class="row" style="align-items:flex-start"><div class="field" style="flex:1;min-width:160px"><label class="lab" for="pr-b">Button text</label><input class="input" id="pr-b" data-pf="btnText" value="${esc(p.btnText)}" maxlength="30"></div>
+        <div class="field" style="flex:2;min-width:200px"><label class="lab" for="pr-l">Button link</label><input class="input" id="pr-l" data-pf="btnLink" value="${esc(p.btnLink)}" inputmode="url" placeholder="https://"></div></div>
+        <div class="row"><button class="btn" type="submit" ${dirty ? '' : 'disabled'}>${dirty ? 'Publish changes' : 'Published'}</button><button type="button" class="linkbtn quiet" data-act="promo-new">Start a new promotion</button></div>
+      </form>
+      <div class="stack"><span class="lab">Preview</span><div class="previewframe stack" id="promoprev"><div class="mini">Find your lesson <span>Video title or topic</span></div>${promoBlock(p, true).replace('margin-top:22px', '')}</div>
+      <p class="small">Search always stays above this block.</p></div>
+    </div>
+    ${note('Replace, don\'t archive', '"Start a new promotion" clears the fields. Publishing replaces what members see. No history, no feed of old announcements.')}
+  </div>`;
+}
+
+/* members */
+function vMembers() {
+  const q = norm(UI.memberSearch);
+  const list = S.members.filter(m => !m.admin).filter(m => !q || norm(m.name + ' ' + m.display + ' ' + m.email).includes(q)).sort((a, b) => b.joined.localeCompare(a.joined));
+  const acts = m => UI.confirming === 'member:' + m.id
+    ? `<span class="confirm">Remove ${esc(m.display)} and delete their posts?<button class="btn danger sm" data-act="member-remove-yes" data-id="${m.id}">Remove</button><button class="linkbtn quiet" data-act="cancel">Cancel</button></span>`
+    : `<button class="linkbtn" data-act="member-suspend" data-id="${m.id}">${m.status === 'suspended' ? 'Unsuspend' : 'Suspend'}</button><button class="linkbtn red" data-act="member-remove" data-id="${m.id}">Remove</button>`;
+  const status = m => `<span class="chip ${m.status === 'suspended' ? 'red' : 'ok'}">${m.status === 'suspended' ? 'Suspended' : 'Active'}</span>`;
+  return `<div class="wrap stack" style="gap:20px">
+    <div class="pagehead"><div class="eyebrow">Members</div><h1>Members (${S.members.length - 1})</h1><p>Emails are visible only to you.</p></div>
+    <div class="searchbar" style="background:#fff;border:2px solid var(--line)"><div class="sfield">${I.search}<input id="mq" data-live="mq" type="search" placeholder="Search by name or email" value="${esc(UI.memberSearch)}" aria-label="Search members"></div></div>
+    <div id="mlist">
+    <div class="tablewrap members"><table class="mt"><thead><tr><th>Member</th><th>Email</th><th>Joined</th><th>Status</th><th></th></tr></thead><tbody>
+      ${list.map(m => `<tr><td><div class="who">${avatar(m, 34)}<div><b>${esc(m.display)}</b><small>${esc(m.name)}</small></div></div></td><td>${esc(m.email)}</td><td>${fdate(m.joined, true)}</td><td>${status(m)}</td><td><div class="row" style="justify-content:flex-end">${acts(m)}</div></td></tr>`).join('')}
+    </tbody></table></div>
+    <div class="mcards">${list.map(m => `<div class="item"><div class="row" style="justify-content:space-between"><div class="who">${avatar(m, 36)}<div><b>${esc(m.display)}</b><small>${esc(m.name)} · ${esc(m.email)}</small></div></div>${status(m)}</div><div class="row">${acts(m)}</div></div>`).join('')}</div>
+    </div>
+    ${note('Suspend vs. remove', 'Suspended members can still read but cannot post. Removing deletes the account and its posts.')}
+  </div>`;
+}
+
+/* ---------- content mutations ---------- */
+function removeContent(kind, id, parent) {
+  if (kind === 'response') S.responses = S.responses.filter(x => x.id !== id);
+  if (kind === 'intro') S.intros = S.intros.filter(x => x.id !== id);
+  if (kind === 'question') S.qa = S.qa.filter(x => x.id !== id);
+  if (kind === 'reply') { const p = S.intros.find(i => i.id === parent); if (p) p.replies = p.replies.filter(x => x.id !== id); }
+  S.reports = S.reports.filter(r => r.targetId !== id && !(kind === 'intro' && r.parentId === id));
+}
+function findEditable(e) {
+  if (e.kind === 'response') return S.responses.find(x => x.id === e.id);
+  if (e.kind === 'intro') return S.intros.find(x => x.id === e.id);
+  if (e.kind === 'question') return S.qa.find(x => x.id === e.id);
+  if (e.kind === 'reply') { const p = S.intros.find(i => i.id === e.parent); return p && p.replies.find(x => x.id === e.id); }
+}
+function clearInline() { UI.editing = UI.replying = UI.reporting = UI.confirming = UI.feedbackFor = UI.answerFor = null; }
+function rerender() { const y = window.scrollY; render(); window.scrollTo(0, y); }
+function resizeImage(file, max, cb) {
+  const fr = new FileReader();
+  fr.onload = () => { const img = new Image(); img.onload = () => {
+    const s = Math.min(1, max / Math.max(img.width, img.height)); const c = document.createElement('canvas');
+    c.width = Math.round(img.width * s); c.height = Math.round(img.height * s); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    cb(c.toDataURL('image/jpeg', .85)); }; img.onerror = () => toast('That file could not be read as an image. Try a JPG or PNG.'); img.src = fr.result; };
+  fr.readAsDataURL(file);
+}
+function setRole(role) {
+  recReset(); clearInline(); S.role = role; save();
+  go(role === 'visitor' ? 'welcome' : role === 'admin' ? 'admin-inbox' : 'home');
+}
+
+/* ---------- actions ---------- */
+const ACT = {
+  menu: () => { UI.menu = !UI.menu; rerender(); },
+  logout: () => setRole('visitor'),
+  navtoggle: () => { UI.navOpen = !UI.navOpen; rerender(); },
+  dd: () => { UI.ddOpen = !UI.ddOpen; rerender(); },
+  nolink: () => toast('That page isn\'t part of these demos yet.'),
+  'ext-doc': a => openExternal('doc', (lesson(a.dataset.id) || {}).title || 'the lesson'),
+  'ext-yt': () => openExternal('yt'),
+  resend: () => toast('Sent again. It can take a minute to arrive.'),
+  verify: () => { S.role = 'member'; save(); go('setup'); },
+  'login-link': () => { S.role = 'member'; S.firstVisit = false; save(); go('home'); },
+  'skip-setup': () => finishSetup(),
+  'photo-remove': () => { member(meId()).photo = null; save(); rerender(); },
+  'see-all': () => { UI.libSearch = UI.search; UI.libShow = 50; go('library'); },
+  'lib-more': () => { UI.libShow += 25; $('#libres').innerHTML = libList(UI.libSearch); },
+  back: () => go(UI.prev && UI.prev !== UI.route ? UI.prev : 'library'),
+  mode: a => { UI.assign.mode = a.dataset.mode; if (a.dataset.mode === 'text') recReset(); rerender(); },
+  'submit-text': a => {
+    const t = UI.assign.text.trim();
+    if (!t) { toast('Write your answer first, then post it.'); $('#atext').focus(); return; }
+    const id = uid('r'); S.responses.push({ id, lessonId: +a.dataset.id, memberId: 'me', prompt: UI.assign.prompt, type: 'text', text: t, date: nowIso(), seen: false });
+    UI.assign.text = ''; save(); render(); scrollToPost(id);
+    toast('Posted. Other members can read it now. Anming gives feedback on some responses, not every one.');
+  },
+  'rec-start': () => recStart(),
+  'rec-stop': () => recStop(),
+  'rec-redo': () => { stopPlayback(); if (R.url) URL.revokeObjectURL(R.url); R.url = null; R.state = 'idle'; R.secs = 0; refreshRec(); },
+  'rec-submit': a => {
+    stopPlayback();
+    const id = uid('r'); if (R.url) blobs[id] = R.url;
+    S.responses.push({ id, lessonId: +a.dataset.id, memberId: 'me', prompt: UI.assign.prompt, type: 'audio', dur: R.secs, date: nowIso(), seen: false, transcript: R.sim ? 'This is a simulated recording from the mockup.' : '' });
+    R.url = null; R.state = 'idle'; R.secs = 0; save(); render(); scrollToPost(id);
+    toast('Your audio response is posted. Other members can listen to it.');
+  },
+  play: a => play(a.dataset.id),
+  edit: a => { clearInline(); UI.editing = { kind: a.dataset.kind, id: a.dataset.id, parent: a.dataset.parent }; rerender(); const t = $('#edittext'); if (t) t.focus(); },
+  'edit-save': () => {
+    const it = findEditable(UI.editing); const t = $('#edittext').value.trim();
+    if (it) { if (UI.editing.kind === 'question') { it.q = $('#editq').value.trim() || it.q; it.detail = t; } else if (t) it.text = t; }
+    clearInline(); save(); rerender(); toast('Saved.');
+  },
+  cancel: () => { clearInline(); rerender(); },
+  del: a => { clearInline(); UI.confirming = a.dataset.kind + ':' + a.dataset.id; rerender(); },
+  'del-yes': a => { removeContent(a.dataset.kind, a.dataset.id, a.dataset.parent); clearInline(); save(); rerender(); toast('Deleted.'); },
+  report: a => { clearInline(); UI.reporting = a.dataset.kind + ':' + a.dataset.id; rerender(); },
+  'report-send': a => {
+    const reason = (document.querySelector('input[name="rr"]:checked') || {}).value || 'Something else';
+    S.reports.push({ id: uid('rep'), kind: a.dataset.kind, targetId: a.dataset.id, parentId: a.dataset.parent || null, reason, reporterId: meId(), date: nowIso() });
+    clearInline(); save(); rerender(); toast('Thanks. Anming will review it. The post stays up until she does.');
+  },
+  'reply-open': a => { clearInline(); UI.replying = a.dataset.id; rerender(); $('#replytext').focus(); },
+  'reply-send': a => {
+    const t = $('#replytext').value.trim(); if (!t) { toast('Write a reply first.'); return; }
+    S.intros.find(i => i.id === a.dataset.id).replies.push({ id: uid('ir'), memberId: meId(), date: nowIso(), text: t });
+    clearInline(); save(); rerender();
+  },
+  'fb-open': a => { clearInline(); UI.feedbackFor = a.dataset.id; rerender(); $('#fbtext').focus(); },
+  'fb-send': a => {
+    const t = $('#fbtext').value.trim(); if (!t) { toast('Write your feedback first.'); return; }
+    const r = S.responses.find(x => x.id === a.dataset.id); r.feedback = { text: t, date: nowIso() }; r.seen = true;
+    clearInline(); save(); rerender(); toast('Feedback posted. ' + esc(member(r.memberId).display) + ' gets an email.');
+  },
+  'ans-open': a => { clearInline(); UI.answerFor = a.dataset.id; rerender(); $('#anstext').focus(); },
+  'ans-send': a => {
+    const t = $('#anstext').value.trim(); if (!t) { toast('Write your answer first.'); return; }
+    const q = S.qa.find(x => x.id === a.dataset.id); q.answer = { text: t, date: nowIso() };
+    clearInline(); save(); rerender(); toast('Answer posted. ' + esc(member(q.memberId).display) + ' gets an email.');
+  },
+  'admin-del-q': a => { removeContent('question', a.dataset.id); save(); rerender(); toast('Question deleted.'); },
+  'admin-del-r': a => { removeContent('response', a.dataset.id); save(); rerender(); toast('Response deleted.'); },
+  seen: a => { S.responses.find(x => x.id === a.dataset.id).seen = true; save(); rerender(); },
+  'seen-all': () => { S.responses.forEach(r => r.seen = true); save(); rerender(); },
+  'rep-delete': a => { const rep = S.reports.find(r => r.id === a.dataset.id); removeContent(rep.kind, rep.targetId, rep.parentId); save(); rerender(); toast('Post deleted.'); },
+  'rep-suspend': a => { const rep = S.reports.find(r => r.id === a.dataset.id); const c = findContent(rep); removeContent(rep.kind, rep.targetId, rep.parentId); if (c) member(c.memberId).status = 'suspended'; save(); rerender(); toast('Post deleted and ' + esc(member(c.memberId).display) + ' suspended.'); },
+  'rep-keep': a => { S.reports = S.reports.filter(r => r.id !== a.dataset.id); save(); rerender(); toast('Report dismissed. The post stays up.'); },
+  'lf-addprompt': () => { syncLessonForm(); UI.lessonForm.prompts.push(''); rerender(); const i = UI.lessonForm.prompts.length - 1; const el = $('#f-p' + i); if (el) el.focus(); },
+  'lf-rmprompt': a => { syncLessonForm(); UI.lessonForm.prompts.splice(+a.dataset.i, 1); rerender(); },
+  'lf-sample': () => { Object.assign(UI.lessonForm, { title: 'Phrasal Verbs with LOOK', doc: DOC(99), yt: YT(99), prompts: ['What is something you are looking forward to this month?', 'Who do you look up to, and why?'], intro: 'Choose one of the questions below and answer by text or audio.' }); UI.formErr = {}; rerender(); },
+  'view-published': () => { const id = UI.published; UI.published = null; S.role = 'member'; save(); go('lesson-' + id); },
+  'add-another': () => { UI.published = null; UI.lessonForm = null; go('admin-add'); },
+  'make-lotw': a => { S.lotw = +a.dataset.id; save(); rerender(); toast('Lesson of the Week updated.'); },
+  'lesson-del': a => { UI.confirming = 'lesson:' + a.dataset.id; rerender(); },
+  'lesson-del-yes': a => { const id = +a.dataset.id; S.lessons = S.lessons.filter(l => l.id !== id); S.responses = S.responses.filter(r => r.lessonId !== id); if (S.lotw === id) S.lotw = lessonsSorted()[0].id; clearInline(); save(); rerender(); toast('Lesson deleted.'); },
+  'promo-noimg': () => { UI.promoDraft.image = null; rerender(); },
+  'promo-new': () => { UI.promoDraft = { on: S.promo.on, tag: '', headline: '', text: '', image: null, btnText: '', btnLink: '' }; rerender(); $('#pr-h').focus(); },
+  'member-suspend': a => { const m = member(a.dataset.id); m.status = m.status === 'suspended' ? 'active' : 'suspended'; save(); rerender(); toast(esc(m.display) + (m.status === 'suspended' ? ' is suspended. They can read but not post.' : ' can post again.')); },
+  'member-remove': a => { UI.confirming = 'member:' + a.dataset.id; rerender(); },
+  'member-remove-yes': a => { const id = a.dataset.id; const m = member(id); S.responses = S.responses.filter(r => r.memberId !== id); S.intros = S.intros.filter(i => i.memberId !== id); S.intros.forEach(i => i.replies = i.replies.filter(r => r.memberId !== id)); S.qa = S.qa.filter(q => q.memberId !== id); S.members = S.members.filter(x => x.id !== id); S.reports = S.reports.filter(r => findContent(r)); clearInline(); save(); rerender(); toast(esc(m.display) + ' was removed.'); }
+};
+function scrollToPost(id) { const el = document.getElementById('p-' + id); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+function finishSetup() {
+  S.firstVisit = true;
+  if (S.pendingQuery) { UI.search = S.pendingQuery; S.pendingQuery = ''; }
+  save(); go('home');
+}
+function syncLessonForm() {
+  document.querySelectorAll('[data-prompt]').forEach(t => UI.lessonForm.prompts[+t.dataset.prompt] = t.value);
+}
+
+/* ---------- forms ---------- */
+const FORMS = {
+  join: f => {
+    const name = $('#jname').value.trim(), email = $('#jemail').value.trim();
+    UI.formErr = {};
+    if (!name) UI.formErr.name = 'Please add your name.';
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) UI.formErr.email = 'That email doesn\'t look complete. Check for a missing @ or dot.';
+    S.signup = { name, email };
+    if (Object.keys(UI.formErr).length) { rerender(); return; }
+    const me = member('me'); me.name = name; me.email = email; me.display = name.split(' ')[0]; me.photo = null;
+    save(); go('verify');
+  },
+  login: () => go('loginsent'),
+  setup: () => { const d = $('#sdisp').value.trim(); if (d) member('me').display = d; finishSetup(); },
+  search: () => { const i = $('#homeq'); i.blur(); const r = $('#homeres'); if (r && r.firstElementChild) r.scrollIntoView({ behavior: 'smooth', block: 'start' }); },
+  intro: () => {
+    const t = $('#introtext').value.trim(); if (!t) { toast('Write your introduction first.'); return; }
+    const id = uid('i'); S.intros.push({ id, memberId: meId(), date: nowIso(), text: t, replies: [] }); save(); render(); scrollToPost(id);
+  },
+  ask: () => {
+    const q = $('#askq').value.trim(), d = $('#askd').value.trim();
+    if (!q) { toast('Type your question first.'); $('#askq').focus(); return; }
+    const id = uid('q'); S.qa.push({ id, memberId: meId(), date: nowIso(), q, detail: d, answer: null }); UI.qaSearch = ''; save(); render(); scrollToPost(id);
+    toast('Question posted. You\'ll get an email when Anming answers.');
+  },
+  profile: () => { const d = $('#pdisp').value.trim(); if (!d) { toast('Your display name can\'t be empty.'); return; } member(meId()).display = d; save(); rerender(); toast('Saved. Other members now see "' + esc(d) + '".'); },
+  lesson: () => {
+    syncLessonForm();
+    const f = UI.lessonForm; UI.formErr = {};
+    if (!f.title.trim()) UI.formErr.title = 'Add the lesson title.';
+    if (!f.doc.trim()) UI.formErr.doc = 'Paste the Google Doc link.';
+    else if (!/^https?:\/\/docs\.google\.com\//.test(f.doc.trim())) UI.formErr.doc = 'This doesn\'t look like a Google Docs link. It should start with https://docs.google.com/';
+    const prompts = f.prompts.map(p => p.trim()).filter(Boolean);
+    if (!prompts.length) UI.formErr.prompts = 'Add at least one prompt for the assignment.';
+    if (Object.keys(UI.formErr).length) { rerender(); return; }
+    let l;
+    if (f.id) { l = lesson(f.id); }
+    else { l = { id: Math.max(0, ...S.lessons.map(x => x.id)) + 1 }; S.lessons.push(l); }
+    Object.assign(l, { title: f.title.trim(), doc: f.doc.trim(), yt: f.yt.trim(), ytTitle: f.ytTitle || f.title.trim(), keywords: f.keywords, date: f.date || TODAY, assignment: { intro: f.intro.trim(), prompts } });
+    if (f.lotw) S.lotw = l.id; else if (S.lotw === l.id) S.lotw = lessonsSorted().find(x => x.id !== l.id).id;
+    save();
+    if (f.id) { UI.lessonForm = null; go('admin-lessons'); toast('Saved. Changes are live.'); }
+    else { UI.published = l.id; UI.lessonForm = null; go('admin-add'); }
+  },
+  promo: () => { S.promo = Object.assign({}, UI.promoDraft, { on: S.promo.on }); UI.promoDraft = Object.assign({}, S.promo); save(); rerender(); toast('Published. Members see the new promotion on their next visit.'); }
+};
+
+/* ---------- live inputs ---------- */
+const LIVE = {
+  pub: v => { UI.search = v; S.pendingQuery = v.trim(); save(); $('#pubres').innerHTML = pubResults(v, v.trim() ? searchLessons(v).slice(0, 3) : []); },
+  home: v => { UI.search = v; S.firstVisit = false; $('#homeres').innerHTML = homeResults(v); },
+  lib: v => { UI.libSearch = v; UI.libShow = 15; $('#libres').innerHTML = libList(v); },
+  qa: v => { UI.qaSearch = v; const y = window.scrollY; const keep = document.activeElement; $('#app').querySelector('#qalist').innerHTML = (() => { let list = S.qa.slice().sort((a, b) => b.date.localeCompare(a.date)); if (v.trim()) { const fake = list.map(x => ({ id: x.id, date: x.date, title: x.q, ytTitle: x.detail, keywords: x.answer ? x.answer.text : '' })); list = searchLessons(v, fake).map(x => S.qa.find(q => q.id === x.id)); } return qaList(list); })(); },
+  atext: v => { UI.assign.text = v; },
+  alq: v => { UI.adminLessonSearch = v; $('#allist').innerHTML = adminLessonRows(v.trim() ? searchLessons(v) : lessonsSorted()); },
+  mq: v => { UI.memberSearch = v; const pos = $('#mq').selectionStart; rerender(); const i = $('#mq'); i.focus(); i.setSelectionRange(pos, pos); }
+};
+
+document.addEventListener('click', e => {
+  const roleBtn = e.target.closest('.roles button');
+  if (roleBtn) { setRole(roleBtn.dataset.role); return; }
+  const tr = e.target.closest('[data-try]');
+  if (tr) { const i = $('#homeq'); i.value = tr.dataset.try; LIVE.home(i.value); return; }
+  const g = e.target.closest('[data-go]');
+  if (g) { e.preventDefault(); if (g.dataset.go === 'home' && UI.route === 'home') UI.search = UI.search; clearInline(); go(g.dataset.go); return; }
+  const a = e.target.closest('[data-act]');
+  if (a && a.tagName !== 'INPUT' && ACT[a.dataset.act]) { e.preventDefault(); ACT[a.dataset.act](a, e); return; }
+  if ((UI.menu && !e.target.closest('.menu')) || ((UI.navOpen || UI.ddOpen) && !e.target.closest('#sitenav'))) { UI.menu = UI.navOpen = UI.ddOpen = false; rerender(); }
+});
+document.addEventListener('submit', e => { const f = e.target.closest('[data-form]'); if (!f) return; e.preventDefault(); FORMS[f.dataset.form](f); });
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.dataset.live && LIVE[t.dataset.live]) LIVE[t.dataset.live](t.value);
+  if (t.dataset.lf && t.type !== 'checkbox') { UI.lessonForm[t.dataset.lf] = t.value; markStep(t); }
+  if (t.dataset.prompt) { UI.lessonForm.prompts[+t.dataset.prompt] = t.value; markStep(t); }
+  if (t.dataset.pf) {
+    UI.promoDraft[t.dataset.pf] = t.value;
+    if (t.dataset.pf === 'text') $('#pr-count').textContent = t.value.length;
+    $('#promoprev').innerHTML = '<div class="mini">Find your lesson <span>Video title or topic</span></div>' + promoBlock(UI.promoDraft, true);
+    const b = document.querySelector('[data-form="promo"] [type="submit"]'); const dirty = JSON.stringify(UI.promoDraft) !== JSON.stringify(S.promo);
+    b.disabled = !dirty; b.textContent = dirty ? 'Publish changes' : 'Published';
+  }
+});
+function markStep(t) {
+  const st = t.closest('.fstep'); if (!st) return;
+  const f = UI.lessonForm, k = t.dataset.lf || 'prompt';
+  const done = k === 'title' ? !!f.title.trim() : k === 'doc' ? /docs\.google\.com/.test(f.doc) : k === 'yt' ? /youtu/.test(f.yt) : (k === 'prompt' || k === 'intro') ? f.prompts.some(p => p.trim()) : st.classList.contains('done');
+  st.classList.toggle('done', done); st.querySelector('.n').textContent = done ? '✓' : [...st.parentNode.children].indexOf(st) + 1;
+}
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.dataset.act === 'pick-prompt') UI.assign.prompt = +t.value;
+  if (t.dataset.act === 'pref') { S.prefs[t.dataset.k] = t.checked; save(); toast(t.dataset.k === 'roundup' ? (t.checked ? 'You\'re subscribed to the monthly roundup.' : 'Unsubscribed from the monthly roundup.') : (t.checked ? 'You\'ll get an email when Anming replies to you.' : 'No emails when Anming replies. You\'ll still see replies here.')); }
+  if (t.dataset.act === 'promo-toggle') { S.promo.on = t.checked; if (UI.promoDraft) UI.promoDraft.on = t.checked; save(); rerender(); toast(t.checked ? 'The featured block is showing again.' : 'The featured block is turned off.'); }
+  if (t.dataset.lf === 'lotw') UI.lessonForm.lotw = t.checked;
+  if (t.id === 'photoin' && t.files[0]) resizeImage(t.files[0], 240, url => { member(meId()).photo = url; save(); rerender(); });
+  if (t.id === 'pr-img' && t.files[0]) resizeImage(t.files[0], 900, url => { UI.promoDraft.image = url; rerender(); });
+});
+window.addEventListener('popstate', () => { UI.route = location.hash.slice(1); render(); });
+
+/* demo bar */
+$('#notesbtn').addEventListener('click', () => { const c = document.body.classList.toggle('clean'); $('#notesbtn').textContent = c ? 'Show notes' : 'Hide notes'; });
+$('#resetbtn').addEventListener('click', () => { try { localStorage.removeItem(KEY); } catch (e) {} S = seedState(); Object.assign(UI, { search: '', libSearch: '', qaSearch: '', lessonForm: null, promoDraft: null, published: null }); clearInline(); recReset(); save(); go('home'); toast('Demo reset to the starting sample data.'); });
+
+function afterRender() {
+  document.documentElement.style.setProperty('--demoh', $('.demobar').offsetHeight + 'px');
+}
+const _go = go;
+go = function (route, keep) { if (route !== UI.route) { UI.prev = UI.route; if (R.state !== 'idle') recReset(); } _go(route, keep); };
+
+UI.route = (location.hash || '').slice(1);
+render();
+window.addEventListener('resize', afterRender);
+
+</script>
+</body>
+</html>
