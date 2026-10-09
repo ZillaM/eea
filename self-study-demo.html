@@ -262,6 +262,10 @@
     .dd .menu::before{display:none}
   }
   @media(max-width:420px){.navcta{padding:9px 14px;font-size:.88rem}.brand .e{width:36px;height:36px;font-size:1.35rem}}
+  .plan ul.included ul.courselist{list-style:none;margin:8px 0 2px 26px;display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
+  .plan ul.included ul.courselist li{padding:3px 0;border-bottom:0;font-size:.95rem;color:var(--muted)}
+  .plan ul.included ul.courselist li::before{content:"•  ";color:var(--coral)}
+  @media(max-width:480px){.plan ul.included ul.courselist{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -286,7 +290,7 @@
       <h1>Learn English the way people <em>really</em> speak it.</h1>
       <p class="lede">Every course I've made, in one place. No textbook English, no AI slop. Natural contemporary American English. Learn at your own pace for $19 a month.</p>
       <div class="ctarow">
-        <a class="btn" href="#compare">Start for $19/month</a>
+        <a class="btn" href="#join">Start for $19/month</a>
         <a class="link" href="#youtube-link" target="_blank" rel="noopener">Watch a free lesson now →</a>
       </div>
       <div class="checks"><span>Cancel anytime</span><span>New lessons every month</span></div>
@@ -367,42 +371,28 @@
   </div>
 </section>
 
-<!-- COMPARE -->
-<section class="compare" id="compare">
+<!-- OFFER -->
+<section class="compare" id="join">
   <div class="wrap">
-    <div class="head with-photo">
-      <div class="headshot"><img src="images/anming-headshot.jpg" alt="Anming, English Evolution teacher"></div>
-      <div>
-        <div class="eyebrow">Compare your options</div>
-        <h2>Two ways to learn with me.</h2>
-        <p>Self-Study gives you the knowledge. Group Classes give you the practice. Pick the one that fits what you need right now.</p>
+    <div class="plans" style="grid-template-columns:1fr;max-width:560px;margin:0 auto">
+      <div class="plan featured">
+        <div class="tag">Learn at your own pace</div>
+        <h3>Self-Study</h3>
+        <div class="price">$19 <span>/ month</span></div>
+        <h4>What's included</h4>
+        <ul class="included">
+          <li>Digital Library of courses
+            <ul class="courselist"><li>Real Talk</li><li>Phrasal Verbs</li><li>American Accent</li><li>Getting Get</li><li>Storycraft</li><li>Secrets to Fluency</li></ul>
+          </li>
+          <li>Recordings and PDFs</li>
+          <li>Online Community Space</li>
+          <li>New lessons every month</li>
+        </ul>
+        <p class="best">Best for learning native English on your own schedule.</p>
+        <a class="btn" href="#">Start Self-Study</a>
       </div>
     </div>
-    <table class="ctable">
-      <thead><tr>
-        <th></th>
-        <th scope="col"><span class="pname">Self-Study</span><span class="sub">Learn on your own</span><span class="pp">$19 <small>/ month</small></span><span class="pnote">The full library</span></th>
-        <th scope="col" class="g"><span class="pname">Group Classes</span><span class="sub">Learn live with me</span><span class="pp">$229 <small>/ month</small></span><span class="pnote">Everything in Self-Study, plus live classes</span></th>
-      </tr></thead>
-      <tbody>
-        <tr class="group-row"><th scope="rowgroup">The library</th><th></th><th class="g inclrow">All of Self-Study, included</th></tr>
-        <tr><th scope="row">Digital Library of courses</th><td><span class="yes" aria-label="Included">✓</span></td><td class="g"><span class="yes" aria-label="Included">✓</span></td></tr>
-        <tr><th scope="row">Recordings and PDFs</th><td><span class="yes" aria-label="Included">✓</span></td><td class="g"><span class="yes" aria-label="Included">✓</span></td></tr>
-        <tr><th scope="row">New lessons every month</th><td><span class="yes" aria-label="Included">✓</span></td><td class="g"><span class="yes" aria-label="Included">✓</span></td></tr>
-        <tr><th scope="row">Online Community Space</th><td><span class="yes" aria-label="Included">✓</span></td><td class="g"><span class="yes" aria-label="Included">✓</span></td></tr>
-        <tr class="group-row"><th scope="rowgroup">Speaking practice</th><th></th><th class="g"></th></tr>
-        <tr><th scope="row">Live classes with me</th><td><span class="no" aria-label="Not included">—</span></td><td class="g"><span class="yes" aria-label="Included">✓</span></td></tr>
-        <tr><th scope="row">You speak in every class</th><td><span class="no" aria-label="Not included">—</span></td><td class="g"><span class="yes" aria-label="Included">✓</span></td></tr>
-        <tr><th scope="row">I correct your mistakes in the moment</th><td><span class="no" aria-label="Not included">—</span></td><td class="g"><span class="yes" aria-label="Included">✓</span></td></tr>
-        <tr><th scope="row">Small group, max 8 students</th><td><span class="no" aria-label="Not included">—</span></td><td class="g"><span class="yes" aria-label="Included">✓</span></td></tr>
-        <tr class="group-row"><th scope="rowgroup">How it fits your life</th><th></th><th class="g"></th></tr>
-        <tr><th scope="row">When you learn</th><td><span class="txt">Anytime, at your own pace</span></td><td class="g"><span class="txt">Live, at set class times</span></td></tr>
-        <tr><th scope="row">Best for</th><td><span class="txt">Learning native English on your own schedule</span></td><td class="g"><span class="txt">Speaking with confidence, with real people</span></td></tr>
-      </tbody>
-      <tfoot><tr><td></td><td><a class="btn ghost" href="#">Start Self-Study</a></td><td class="g"><a class="btn" href="group-classes-demo.html">Join Group Classes</a></td></tr></tfoot>
-    </table>
-    <p class="cnote"><strong>Group Classes include everything in Self-Study.</strong> You never pay for both. Many students start with Self-Study and join a class later.</p>
-    <span id="join"></span>
+    <p class="cnote">Want live speaking practice? <a class="link" href="group-classes-demo.html">Group Classes include everything in Self-Study →</a></p>
   </div>
 </section>
 
