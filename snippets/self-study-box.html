@@ -1,0 +1,45 @@
+<!-- English Evolution: Self-Study plan box. Paste into a Custom HTML / Code block. -->
+<!-- Replace CHECKOUT-LINK and GROUP-CLASSES-LINK with your real page URLs. -->
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  .ee-ss{--teal:#3A7F8C;--teal-dark:#2E6874;--coral:#E3997E;--ink:#16231F;--muted:#4F5B57;--surface:#FFFDF9;
+    font-family:"Open Sans",system-ui,sans-serif;font-size:18px;line-height:1.6;color:var(--ink);padding:48px 16px;box-sizing:border-box}
+  .ee-ss *{box-sizing:border-box;margin:0;padding:0}
+  .ee-ss .ee-card{max-width:560px;margin:0 auto;background:var(--surface);border-radius:22px;padding:34px;outline:3px solid var(--teal);box-shadow:0 14px 34px -22px rgba(22,35,31,.35)}
+  .ee-ss .ee-tag{font-family:"Outfit",sans-serif;font-weight:700;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--coral)}
+  .ee-ss h3{font-family:"Outfit",sans-serif;font-size:1.6rem;font-weight:700;margin:6px 0 4px;color:var(--ink)}
+  .ee-ss .ee-price{font-family:"Outfit",sans-serif;font-weight:800;font-size:2.4rem;color:var(--ink)}
+  .ee-ss .ee-price span{font-size:1rem;font-weight:600;color:var(--muted)}
+  .ee-ss h4{font-family:"Outfit",sans-serif;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-dark);margin-top:22px}
+  .ee-ss ul.ee-inc{list-style:none;margin:10px 0 22px}
+  .ee-ss ul.ee-inc>li{padding:12px 0;border-bottom:1px solid #E2D6C1;color:var(--ink)}
+  .ee-ss ul.ee-inc>li::before{content:"✓  ";color:var(--teal);font-weight:700}
+  .ee-ss ul.ee-courses{list-style:none;margin:8px 0 2px 26px;display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
+  .ee-ss ul.ee-courses li{padding:3px 0;font-size:.95rem;color:var(--muted)}
+  .ee-ss ul.ee-courses li::before{content:"•  ";color:var(--coral)}
+  .ee-ss .ee-best{font-size:.92rem;color:var(--muted);margin-bottom:22px}
+  .ee-ss .ee-btn{display:block;text-align:center;background:var(--teal);color:#fff;text-decoration:none;font-family:"Outfit",sans-serif;font-weight:600;font-size:1.05rem;padding:16px 30px;border-radius:999px;box-shadow:0 10px 24px -10px rgba(58,127,140,.7)}
+  .ee-ss .ee-btn:hover{background:var(--teal-dark)}
+  .ee-ss .ee-note{margin-top:16px;font-size:.92rem;text-align:center;color:var(--muted)}
+  .ee-ss .ee-note a{color:var(--teal-dark);font-weight:700;text-decoration:none;font-family:"Outfit",sans-serif}
+  @media(max-width:480px){.ee-ss .ee-card{padding:26px}.ee-ss ul.ee-courses{grid-template-columns:1fr}}
+</style>
+<div class="ee-ss" id="join">
+  <div class="ee-card">
+    <div class="ee-tag">Learn at your own pace</div>
+    <h3>Self-Study</h3>
+    <div class="ee-price">$19 <span>/ month</span></div>
+    <h4>What's included</h4>
+    <ul class="ee-inc">
+      <li>Digital Library of courses
+        <ul class="ee-courses"><li>Real Talk</li><li>Phrasal Verbs</li><li>American Accent</li><li>Getting Get</li><li>Storycraft</li><li>Secrets to Fluency</li></ul>
+      </li>
+      <li>Recordings and PDFs</li>
+      <li>Online Community Space</li>
+      <li>New lessons every month</li>
+    </ul>
+    <p class="ee-best">Best for learning native English on your own schedule.</p>
+    <a class="ee-btn" href="CHECKOUT-LINK">Start Self-Study</a>
+  </div>
+  <p class="ee-note">Want live speaking practice? <a href="GROUP-CLASSES-LINK">Group Classes include everything in Self-Study →</a></p>
+</div>
